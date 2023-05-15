@@ -196,8 +196,8 @@ Properties define the behavior of the `v-select` component:
 
 | Property           | Type       | Default        | Description  |
 | ------------------ | ---------- | -------------- | -------------|
-| options        | Array     | []      | The array of options for the select component.             |
-| iconColor      | String    | '#005FAA' | The color of the select icon.                             |
+| options        | Array     | []      | An array of options for the Select component. The options can either be primitive values (e.g. `[1,2,3]` or `['USA', 'Canada', 'Israel']`) or objects with `{ label: '', key: '' }` structure.             |
+| iconColor      | String    | '#005FAA' | The color of the arrow icon.                             |
 | bgColor      | String    | '#fff' | The backgroung color of the select.                             |
 | selectLabel    | String    | ''      | The label for the select component.                        |
 | isInsideLabel  | Boolean   | false   | Determines if the label should be inside the select box.   |
@@ -223,4 +223,4 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## License
 
-[MIT License](LICENSE.md) © Dvir Cohen 
+[MIT License](https://github.com/Dvirco1234/validation-vue/blob/main/LICENSE.md) © Dvir Cohen 
