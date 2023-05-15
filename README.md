@@ -82,7 +82,7 @@ $ yarn add validation-vue
     <v-form @submitForm="onSubmit">
       <v-input :idx="0" id="input" v-model="name" required/>
       <v-select :idx="1" id="select" v-model="count" :options="[1, 2, 3]" required/>
-      <v-input :idx="2" id="input" v-model="email" required />
+      <v-input :idx="2" id="input" v-model="email" required :validationRules="['emailRule']" />
       <button type="submit">Submit</button>
     </v-form>
   </div>
