@@ -75,7 +75,7 @@ export default {
     mounted() {
         this.selectedOption = this.optionsFormat.find((option) => option.key === this.modelValue) || this.defaultOption
         // if (this.required) this.$emit('checkIsVaild', { isValid: this.selectedOption.key, idx: this.idx, ref: this.$refs[this.id], validate: this.validate })
-        if (this.required) this.$parent.setInputValidations({ isValid: this.selectedOption.key, idx: this.idx, validate: this.validate })
+        if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid: this.selectedOption.key, idx: this.idx, validate: this.validate })
     },
     methods: {
         toggleOptions() {
@@ -88,7 +88,8 @@ export default {
             this.isOptionsShow = false
             this.searchTerm = ''
             if (this.hasOpened) this.validate()
-            if (this.required) this.$emit('checkIsVaild', { isValid: this.isValid, idx: this.idx, ref: this.$refs[this.id], validate: this.validate })
+            // if (this.required) this.$emit('checkIsVaild', { isValid: this.isValid, idx: this.idx, ref: this.$refs[this.id], validate: this.validate })
+            if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid: this.isValid, idx: this.idx, validate: this.validate })
         },
         selectOption(option) {
             this.selectedOption = option

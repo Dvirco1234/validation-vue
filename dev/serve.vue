@@ -25,7 +25,8 @@ export default defineComponent({
     <!-- <validation-vue-sample /> -->
     <v-form>
       <v-input :idx="0" id="input" v-model="name" required/>
-      <v-select required :options="[1,2,3]" :idx="1" id="select"/>
+      <v-select :idx="1" id="select" v-model="count" :options="[1,2,3]" required/>
     </v-form>
+    <v-select required :options="[1,2,3]" :idx="1" id="select"/>
   </div>
 </template>

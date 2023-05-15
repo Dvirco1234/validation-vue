@@ -141,7 +141,7 @@ export default {
         console.log('this.$parent: ', this.$parent);
         const { isValid } = this.checkValidation()
         // this.$emit('checkIsVaild', { isValid, idx: this.idx, ref: this.$refs[this.id], validate: this.validate })
-        this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
+        if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
     },
     methods: {
         handleInput(value) {
@@ -155,7 +155,7 @@ export default {
             if (this.isBlured || value.length === this.maxLength) ({ isValid } = this.validate())
             else ({ isValid } = this.checkValidation())
             // this.$emit('checkIsVaild', { isValid, idx: this.idx, ref: this.$refs[this.id], validate: this.validate })
-            this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
+            if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
         },
         async validate() {
             this.isBlured = true
