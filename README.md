@@ -143,14 +143,66 @@ app.mount('#app')
 ```sh
 $ npm start
 ```
+## Form Events
+
+The `<VForm>` component emits the following event:
+
+- **submitForm**: Emitted when the form is submitted. The event handler receives a boolean value indicating the form's validity (true for valid, false for invalid).
 
 ## Properties
 
-Properties define the visual behavior of the library:
+### Shared Properties
 
-| Property     | Type   | Default  | Description |
-| ------------ | ------ | -------- | ------------ |
-| :orientation | string | vertical | Orientation of the container. Can be horizontal or vertical. |
+| Property           | Type       | Default        | Description                                    |
+| ------------------ | ---------- | -------------- | ---------------------------------------------- |
+| `id`           | `String`    | **_required_**  | The unique identifier for the component.               |
+| `idx`          | `Number`    | **_required_**  | The index of the input element inside the form. This prop is best used in a `v-for` loop. If the input component is not inside a loop, you need to manually add the index.                            |
+| `required`         | `Boolean`  | `false`        | Indicates whether the input is required.                    |
+| `primaryColor` | `String`    | `'#005FAA'`   | The primary color for the component.                    |
+| `errorColor`   | `String`    | `'#c10015'`   | The color to indicate an error state in the component.  |
+
+### Input Properties
+
+Properties define the behavior of the `v-input` component:
+
+| Property           | Type       | Default        | Description                                                 |
+| ------------------ | ---------- | -------------- | ----------------------------------------------------------- |
+<!-- | `id`               | `String`   | **_required_** | The unique identifier for the input element.                |
+| `idx`              | `Number`   | **_required_** | The index of the input element inside the form. This prop is best used in a `v-for` loop. If the input component is not inside a loop, you need to manually add the index (for every element in the form, not only input elements).                             | -->
+| `type`             | `String`   | `'text'`       | The type of input.                                          |
+| `placeholder`      | `String`   | `''`           | The placeholder text for the input.                         |
+| `label`            | `String`   | `''`           | The label text for the input.                               |
+| `rules`            | `Array`    | `[]`           | An array of validation rules.                               |
+| `asyncRule`        | `Function` | `null`         | An asynchronous validation rule function.                   |
+| `showValidIcon`    | `Boolean`  | `false`        | Indicates whether to show a valid icon.                     |
+| `showPasswordIcon` | `Boolean`  | `false`        | Indicates whether to show a password icon.                  |
+| `required`         | `Boolean`  | `false`        | Indicates whether the input is required.                    |
+| `isChecklist`      | `Boolean`  | `false`        | Indicates whether the input has a checklist of validations. |
+| `isDigitsOnly`     | `Boolean`  | `false`        | Indicates whether the input should accept only digits.      |
+| `isChecklistGrid`  | `Boolean`  | `true`         | Indicates whether to use a grid layout for checklist items. |
+| `maxLength`        | `Number`   | `Infinity`     | The maximum number of characters allowed in the input.      |
+| `minLength`        | `Number`   | `0`            | The minimum number of characters required in the input.     |
+| `textareaRows`     | `Number`   | `0`            | The number of rows for a textarea input.                    |
+| `errorColor`       | `String`   | `'#c10015'`    | The color of the error message and error icon.              |
+| `validColor`       | `String`   | `'#7CB261'`    | The color of the success icon.                              |
+| `placeholderColor` | `String`   | `'#7B97AC'`    | The color of the placeholder text.                          |
+<!-- | `primaryColor`     | `String`   | `'#005faa'`    | The primary color used for styling.                         |
+| `txtColor`         | `String`   | `'#7B97AC'`    | The color of the label and input text.                      | -->
+
+### Input Properties
+
+Properties define the behavior of the `v-select` component:
+
+| Property           | Type       | Default        | Description  |
+| ------------------ | ---------- | -------------- | -------------|
+| options        | Array     | []      | The array of options for the select component.             |
+| iconColor      | String    | '#005FAA' | The color of the select icon.                             |
+| bgColor      | String    | '#fff' | The backgroung color of the select.                             |
+| selectLabel    | String    | ''      | The label for the select component.                        |
+| isInsideLabel  | Boolean   | false   | Determines if the label should be inside the select box.   |
+| defaultOption  | Object    | { label: 'Choose', key: '' } | The default option for the select component.        |
+| isSearch       | Boolean   | false         | Determines if a search functionality should be enabled.    |
+
 
 ## Contribution
 
@@ -158,170 +210,7 @@ Contributions to the Validation-Vue package are welcome! If you find any issues 
 
 This task will create a distribution version of the project inside your local `dist/` folder
 
-### Serving the distribution version
-
-```sh
-$ npm run serve:dist
-```
-
-This will use `lite-server` for servign your already generated distribution version of the project.
-
-_Note_ this requires [Building a distribution version](#building-a-distribution-version) first.
-
-## API
-
-### useBasicFetch
-
-```js
-useBasicFetch(((url: string) = ''), ((delay: number) = 0))
-```
-
-Supported options and result fields for the `useBasicFetch` hook are listed below.
-
-#### Options
-
-`url`
-
-| Type   | Default value |
-| ------ | ------------- |
-| string | ''            |
-
-If present, the request will be performed as soon as the component is mounted
-
-Example:
-
-```tsx
-const MyComponent: React.FC = () => {
-    const { data, error, loading } = useBasicFetch('https://api.icndb.com/jokes/random')
-
-    if (error) {
-        return <p>Error</p>
-    }
-
-    if (loading) {
-        return <p>Loading...</p>
-    }
-
-    return (
-        <div className="App">
-            <h2>Chuck Norris Joke of the day</h2>
-            {data && data.value && <p>{data.value.joke}</p>}
-        </div>
-    )
-}
-```
-
-`delay`
-
-| Type   | Default value | Description          |
-| ------ | ------------- | -------------------- |
-| number | 0             | Time in milliseconds |
-
-If present, the request will be delayed by the given amount of time
-
-Example:
-
-```tsx
-type Joke = {
-    value: {
-        id: number
-        joke: string
-    }
-}
-
-const MyComponent: React.FC = () => {
-    const { data, error, loading } = useBasicFetch<Joke>('https://api.icndb.com/jokes/random', 2000)
-
-    if (error) {
-        return <p>Error</p>
-    }
-
-    if (loading) {
-        return <p>Loading...</p>
-    }
-
-    return (
-        <div className="App">
-            <h2>Chuck Norris Joke of the day</h2>
-            {data && data.value && <p>{data.value.joke}</p>}
-        </div>
-    )
-}
-```
-
-### fetchData
-
-```js
-fetchData(url: string)
-```
-
-Perform an asynchronous http request against a given url
-
-```tsx
-type Joke = {
-    value: {
-        id: number
-        joke: string
-    }
-}
-
-const ChuckNorrisJokes: React.FC = () => {
-    const { data, fetchData, error, loading } = useBasicFetch<Joke>()
-    const [jokeId, setJokeId] = useState(1)
-
-    useEffect(() => {
-        fetchData(`https://api.icndb.com/jokes/${jokeId}`)
-    }, [jokeId, fetchData])
-
-    const handleNext = () => setJokeId(jokeId + 1)
-
-    if (error) {
-        return <p>Error</p>
-    }
-
-    const jokeData = data && data.value
-
-    return (
-        <div className="Comments">
-            {loading && <p>Loading...</p>}
-            {!loading && jokeData && (
-                <div>
-                    <p>Joke ID: {jokeData.id}</p>
-                    <p>{jokeData.joke}</p>
-                </div>
-            )}
-            {!loading && jokeData && !jokeData.joke && <p>{jokeData}</p>}
-            <button disabled={loading} onClick={handleNext}>
-                Next Joke
-            </button>
-        </div>
-    )
-}
-```
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
-1.  Fork it!
-2.  Create your feature branch: `git checkout -b my-new-feature`
-3.  Add your changes: `git add .`
-4.  Commit your changes: `git commit -am 'Add some feature'`
-5.  Push to the branch: `git push origin my-new-feature`
-6.  Submit a pull request :sunglasses:
-
-## Credits
-
-TODO: Write credits
-
-## Built With
-
--   Dropwizard - Bla bla bla
--   Maven - Maybe
--   Atom - ergaerga
--   Love
-
-## Versioning
+<!-- ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
 
@@ -333,4 +222,4 @@ See also the list of [contributors](https://github.com/your/project/contributors
 
 ## License
 
-[MIT License](https://andreasonny.mit-license.org/2019) © Andrea SonnY
+[MIT License](https://andreasonny.mit-license.org/2019) © Andrea SonnY -->

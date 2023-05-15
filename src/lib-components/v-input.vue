@@ -10,7 +10,6 @@
                 :style="{ 'outline-color': showErrorMessage ? errorColor : showValidIcon && isValid ? validColor : '', 'padding-inline-start': showPasswordIcon && type === 'password' ? '42px' : '' }" />
             <div class="valid-icon-wrapper">
                 <span v-if="!showErrorMessage && isValid && showValidIcon" class="icon success-icon">
-                    <!-- <img src="../assets/icons/validate.svg"> -->
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24">
                         <path
                             d="m10.6 16.6 7.05-7.05-1.4-1.4-5.65 5.65-2.85-2.85-1.4 1.4ZM12 22q-2.075 0-3.9-.788-1.825-.787-3.175-2.137-1.35-1.35-2.137-3.175Q2 14.075 2 12t.788-3.9q.787-1.825 2.137-3.175 1.35-1.35 3.175-2.138Q9.925 2 12 2t3.9.787q1.825.788 3.175 2.138 1.35 1.35 2.137 3.175Q22 9.925 22 12t-.788 3.9q-.787 1.825-2.137 3.175-1.35 1.35-3.175 2.137Q14.075 22 12 22Z"
@@ -18,7 +17,6 @@
                     </svg>
                 </span>
                 <span v-if="showErrorMessage" class="icon error-icon" :title="errorMessage">
-                    <!-- <img src="../assets/icons/error-full.svg"> -->
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24">
                         <path
                             d="M12 17q.425 0 .713-.288Q13 16.425 13 16t-.287-.713Q12.425 15 12 15t-.712.287Q11 15.575 11 16t.288.712Q11.575 17 12 17Zm-1-4h2V7h-2Zm1 9q-2.075 0-3.9-.788-1.825-.787-3.175-2.137-1.35-1.35-2.137-3.175Q2 14.075 2 12t.788-3.9q.787-1.825 2.137-3.175 1.35-1.35 3.175-2.138Q9.925 2 12 2t3.9.787q1.825.788 3.175 2.138 1.35 1.35 2.137 3.175Q22 9.925 22 12t-.788 3.9q-.787 1.825-2.137 3.175-1.35 1.35-3.175 2.137Q14.075 22 12 22Z"
@@ -27,7 +25,6 @@
                 </span>
             </div>
             <div class="show-password-icon" v-if="showPasswordIcon && type === 'password'" @click.stop="togglePasswordShown">
-                <!-- <div class="show-password-icon" v-if="showPasswordIcon" @click="togglePasswordShown"> -->
                 <span v-if="!isPasswordShown" class="icon password-icon open-eye-icon">
                     <!-- OPEN EYE -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24.75" height="16.5" viewBox="0 0 24.75 16.5">
@@ -45,13 +42,10 @@
                     </svg>
                 </span>
             </div>
-            <!-- <div v-if="showErrorMessage" class="error-message" :style="{color: errorColor}">{{ errorMessage }}</div> -->
             <div class="error-message" :class="{ hide: !showErrorMessage }" :style="{ color: errorColor }">{{ errorMessage }}</div>
         </div>
         <article v-if="checklist" class="checklist" :class="{ grid: isChecklistGrid }" :style="{ color: txtColor }">
             <div v-for="(check, idx) in checklist" :key="`${checklist.errorMessage}-${idx}`" class="list flex align-center">
-                <!-- <img v-if="check.isValid" src="../assets/icons/check_circle_full20.svg" >
-                <img v-else src="../assets/icons/cancel_full20.svg" > -->
                 <svg v-if="check.isValid" xmlns="http://www.w3.org/2000/svg" height="20" width="20">
                     <path
                         d="m8.938 13 4.958-4.938L12.833 7l-3.895 3.875-1.771-1.75-1.063 1.063ZM10 18q-1.646 0-3.104-.625-1.458-.625-2.552-1.719t-1.719-2.552Q2 11.646 2 10q0-1.667.625-3.115.625-1.447 1.719-2.541Q5.438 3.25 6.896 2.625T10 2q1.667 0 3.115.625 1.447.625 2.541 1.719 1.094 1.094 1.719 2.541Q18 8.333 18 10q0 1.646-.625 3.104-.625 1.458-1.719 2.552t-2.541 1.719Q11.667 18 10 18Z"
@@ -83,12 +77,11 @@ export default {
         isChecklist: { type: Boolean, default: false },
         isDigitsOnly: { type: Boolean, default: false },
         isChecklistGrid: { type: Boolean, default: true },
+        // TODO: add option for string and then parseInt
         maxLength: { type: Number, default: Infinity },
         minLength: { type: Number, default: 0 },
         modelValue: String,
         rules: { type: Array, default: () => [] },
-        // validationRules: { type: Array, default: () => [] },
-        // validationOptions: { type: Array, default: () => [] },
         asyncRule: { type: Function, default: null },
         textareaRows: { type: Number, default: 0 },
         // errorMessage: { type: String, default: 'This field is required' },
@@ -103,7 +96,6 @@ export default {
     data() {
         return {
             inputValue: this.modelValue,
-            // validationRulesFormat: this.validationRules,
             rulesFormat: [],
             isBlured: false,
             isValid: false,
@@ -134,16 +126,12 @@ export default {
         }
     },
     created() {
-        // console.log('this.validationRules: ', this.validationRules);
-        // if (this.validationOptions.length) this.formatValidationRules()
-        // this.formatValidationRules()
         this.formatRules()
         if (this.isChecklist) this.validateChecklist()
     },
     mounted() {
         console.log('this.$parent: ', this.$parent);
         const { isValid } = this.checkValidation()
-        // this.$emit('checkIsVaild', { isValid, idx: this.idx, ref: this.$refs[this.id], validate: this.validate })
         if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
     },
     methods: {
@@ -157,7 +145,6 @@ export default {
             let isValid 
             if (this.isBlured || value.length === this.inputMaxLength) ({ isValid } = this.validate())
             else ({ isValid } = this.checkValidation())
-            // this.$emit('checkIsVaild', { isValid, idx: this.idx, ref: this.$refs[this.id], validate: this.validate })
             if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
         },
         async validate() {
@@ -185,16 +172,6 @@ export default {
         togglePasswordShown() {
             this.isPasswordShown = !this.isPasswordShown
         },
-        // formatValidationRules() {
-        //     let validationRules = []
-        //     if (this.validationOptions.length) validationRules = this.validationOptions.map(opt => this.validationOptsMap[opt])
-        //     console.log('this.required: ', this.required);
-        //     if (this.required) {
-        //         if(!this.validationOptions.some(opt => opt === 'requiredRule')) validationRules.push(this.validationOptsMap['requiredRule'])
-        //     }
-        //     this.validationRulesFormat = [...this.validationRules, ...validationRules]
-        //     console.log('this.validationRulesFormat: ', this.validationRulesFormat);
-        // },
         formatRules() {
             let rules = []
             if (this.rules?.length) rules = this.rules.map(opt => {
