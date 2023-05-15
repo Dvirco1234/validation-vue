@@ -76,6 +76,7 @@ $ yarn add validation-vue
 
 ### Local Usage
 
+my-component.vue
 ```js
 <template>
   <div>
@@ -167,8 +168,6 @@ Properties define the behavior of the `v-input` component:
 
 | Property           | Type       | Default        | Description                                                 |
 | ------------------ | ---------- | -------------- | ----------------------------------------------------------- |
-<!-- | `id`               | `String`   | **_required_** | The unique identifier for the input element.                |
-| `idx`              | `Number`   | **_required_** | The index of the input element inside the form. This prop is best used in a `v-for` loop. If the input component is not inside a loop, you need to manually add the index (for every element in the form, not only input elements).                             | -->
 | `type`             | `String`   | `'text'`       | The type of input.                                          |
 | `placeholder`      | `String`   | `''`           | The placeholder text for the input.                         |
 | `label`            | `String`   | `''`           | The label text for the input.                               |
@@ -186,6 +185,8 @@ Properties define the behavior of the `v-input` component:
 | `errorColor`       | `String`   | `'#c10015'`    | The color of the error message and error icon.              |
 | `validColor`       | `String`   | `'#7CB261'`    | The color of the success icon.                              |
 | `placeholderColor` | `String`   | `'#7B97AC'`    | The color of the placeholder text.                          |
+<!-- | `id`               | `String`   | **_required_** | The unique identifier for the input element.                |
+| `idx`              | `Number`   | **_required_** | The index of the input element inside the form. This prop is best used in a `v-for` loop. If the input component is not inside a loop, you need to manually add the index (for every element in the form, not only input elements).                             | -->
 <!-- | `primaryColor`     | `String`   | `'#005faa'`    | The primary color used for styling.                         |
 | `txtColor`         | `String`   | `'#7B97AC'`    | The color of the label and input text.                      | -->
 
@@ -212,14 +213,14 @@ This task will create a distribution version of the project inside your local `d
 
 <!-- ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).-->
 
 ## Authors
 
--   **John Doe** - _Initial work_ - [JohnDoe](https://github.com/JohnDoe)
+-   **Dvir Cohen** - _Initial work_ - [Dvirco1234](https://github.com/Dvirco1234)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+<!-- See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project. -->
 
 ## License
 
-[MIT License](https://andreasonny.mit-license.org/2019) © Andrea SonnY -->
+[MIT License](LICENSE.md) © Dvir Cohen 
