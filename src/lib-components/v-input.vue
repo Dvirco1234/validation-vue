@@ -6,7 +6,7 @@
                 @input="handleInput($event.target.value)" @blur="validate()" :value="modelValue"
                 :style="{ 'outline-color': showErrorMessage ? errorColor : '' }" ></textarea>
             <input v-else :ref="'ref' + id" :id="id" :name="id" :type="isPasswordShown || type === 'cc' ? 'text' : type" :placeholder="placeholder"
-                :maxlength="maxLength" @input="handleInput($event.target.value)" @blur="validate()" :value="modelValue"
+                :maxlength="inputMaxLength" @input="handleInput($event.target.value)" @blur="validate()" :value="modelValue"
                 :style="{ 'outline-color': showErrorMessage ? errorColor : showValidIcon && isValid ? validColor : '', 'padding-inline-start': showPasswordIcon && type === 'password' ? '42px' : '' }" />
             <div class="valid-icon-wrapper">
                 <span v-if="!showErrorMessage && isValid && showValidIcon" class="icon success-icon">
@@ -83,7 +83,8 @@ export default {
         isChecklist: { type: Boolean, default: false },
         isDigitsOnly: { type: Boolean, default: false },
         isChecklistGrid: { type: Boolean, default: true },
-        inputMaxLength: { type: Number, default: Infinity },
+        maxLength: { type: Number, default: Infinity },
+        minLength: { type: Number, default: 0 },
         modelValue: String,
         rules: { type: Array, default: () => [] },
         // validationRules: { type: Array, default: () => [] },
@@ -110,7 +111,7 @@ export default {
             errorMessage: '',
             checklist: null,
             isPasswordShown: false,
-            maxLength: this.inputMaxLength,
+            inputMaxLength: this.maxLength,
             cardType: '',
             validationOptsMap: {
                 requiredRule: (val) => ({
@@ -118,7 +119,7 @@ export default {
                     errorMessage: '',
                 }),
                 lengthRule: (val) => ({
-                    isValid: val.length === this.inputMaxLength,
+                    isValid: val.length >= this.minLength && val.length <= this.inputMaxLength,
                     errorMessage: 'Invalid value',
                 }),
                 emailRule: (val) => ({
@@ -154,7 +155,7 @@ export default {
             this.inputValue = value
             this.$emit('update:modelValue', value)
             let isValid 
-            if (this.isBlured || value.length === this.maxLength) ({ isValid } = this.validate())
+            if (this.isBlured || value.length === this.inputMaxLength) ({ isValid } = this.validate())
             else ({ isValid } = this.checkValidation())
             // this.$emit('checkIsVaild', { isValid, idx: this.idx, ref: this.$refs[this.id], validate: this.validate })
             if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
@@ -200,26 +201,25 @@ export default {
                 if (typeof opt === 'string') return this.validationOptsMap[opt]
                 return opt
             })
-            if (this.required) {
-                if(!this.rules.some(opt => opt === 'requiredRule')) rules.push(this.validationOptsMap['requiredRule'])
-            }
-            this.rulesFormat = rules
+            if (this.required) rules.push(this.validationOptsMap['requiredRule'])
+            if (this.minLength || this.maxLength !== Infinity) rules.push(this.validationOptsMap['lengthRule'])
+            this.rulesFormat = [...new Set(rules)]
             console.log('this.rulesFormat: ', this.rulesFormat);
         },
         formatCreditCard(val) {
             let input = val.replace(/\D/g, "")
             if (/^4/.test(input)) {
                 this.cardType = 'visa'
-                this.maxLength = 19
+                this.inputMaxLength = 19
             } else if (/^5[1-5]/.test(input)) {
                 this.cardType = 'mastercard'
-                this.maxLength = 19
+                this.inputMaxLength = 19
             } else if (/^3[47]/.test(input)) {
                 this.cardType = 'amex'
-                this.maxLength = 17
+                this.inputMaxLength = 17
             } else if (/^6(?:011|5)/.test(input)) {
                 this.cardType = 'discover'
-                this.maxLength = 19
+                this.inputMaxLength = 19
             }
 
             let formattedInput = ''
@@ -232,14 +232,14 @@ export default {
         },
         isCcValid(val) {
             if(!val) return false
-            if(val.length !== this.maxLength) return false
-            const input = val.replace(/\s/g, "")
+            if(val.length !== this.inputMaxLength) return false
+            const input = val.replace(/\s/g, '')
             switch (this.cardType) {
-                case "visa":
-                case "mastercard":
-                case "discover":
+                case 'visa':
+                case 'mastercard':
+                case 'discover':
                     return this.validateLuhnAlgorithm(input)
-                case "amex":
+                case 'amex':
                     return /^3[47][0-9]{13}$/.test(input)
                 default:
                     return false

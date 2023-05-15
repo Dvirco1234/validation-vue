@@ -29,7 +29,8 @@ export default defineComponent({
   <div id="app">
     <!-- <validation-vue-sample /> -->
     <v-form>
-      <v-input :idx="0" id="input" v-model="name" required :rules="['emailRule', tryRule]"/>
+      <v-input :idx="0" id="input" v-model="name" required :rules="['emailRule', tryRule, 'lengthRule', tryRule, 'requiredRule']" :maxLength="10"/>
+      <v-input :idx="0" id="input" v-model="name" :minLength="3"/>
       <v-select :idx="1" id="select" v-model="count" :options="[1,2,3]" required/>
     </v-form>
     <v-select required :options="[1,2,3]" :idx="1" id="select"/>
