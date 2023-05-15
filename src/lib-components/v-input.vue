@@ -85,8 +85,9 @@ export default {
         isChecklistGrid: { type: Boolean, default: true },
         inputMaxLength: { type: Number, default: Infinity },
         modelValue: String,
-        validationRules: { type: Array, default: () => [] },
-        validationOptions: { type: Array, default: () => [] },
+        rules: { type: Array, default: () => [] },
+        // validationRules: { type: Array, default: () => [] },
+        // validationOptions: { type: Array, default: () => [] },
         asyncRule: { type: Function, default: null },
         textareaRows: { type: Number, default: 0 },
         // errorMessage: { type: String, default: 'This field is required' },
@@ -101,7 +102,8 @@ export default {
     data() {
         return {
             inputValue: this.modelValue,
-            validationRulesFormat: this.validationRules,
+            // validationRulesFormat: this.validationRules,
+            rulesFormat: [],
             isBlured: false,
             isValid: false,
             showErrorMessage: false,
@@ -124,7 +126,6 @@ export default {
                     errorMessage: 'Please enter a valid email address',
                 }),
                 ccRule: (val) => ({
-                    // isValid: () => this.isCcValid(val),
                     isValid: this.isCcValid(val),
                     errorMessage: 'Invalid credit card number',
                 }),
@@ -134,7 +135,8 @@ export default {
     created() {
         // console.log('this.validationRules: ', this.validationRules);
         // if (this.validationOptions.length) this.formatValidationRules()
-        this.formatValidationRules()
+        // this.formatValidationRules()
+        this.formatRules()
         if (this.isChecklist) this.validateChecklist()
     },
     mounted() {
@@ -145,7 +147,7 @@ export default {
     },
     methods: {
         handleInput(value) {
-            if (this.isDigitsOnly) value = value.replace(/\D/g, "")
+            if (this.isDigitsOnly) value = value.replace(/\D/g, '')
             if (this.type === 'cc') value = this.formatCreditCard(value)
             if (this.asyncRule) this.isBlured = true
             this.$refs['ref' + this.id].value = value
@@ -167,7 +169,7 @@ export default {
             return { isValid }
         },
         async checkValidation() {
-            let validationResult = this.validationRulesFormat.reduce((acc, validationRule) => {
+            let validationResult = this.rulesFormat.reduce((acc, validationRule) => {
                 if (!acc.isValid) return acc
                 const { isValid, errorMessage } = validationRule(this.inputValue)
                 return { isValid, errorMessage }
@@ -177,20 +179,32 @@ export default {
         },
         validateChecklist() {
             this.isBlured = true
-            this.checklist = this.validationRulesFormat.map(validationRule => validationRule(this.inputValue))
+            this.checklist = this.rulesFormat.map(validationRule => validationRule(this.inputValue))
         },
         togglePasswordShown() {
             this.isPasswordShown = !this.isPasswordShown
         },
-        formatValidationRules() {
-            let validationRules = []
-            if (this.validationOptions.length) validationRules = this.validationOptions.map(opt => this.validationOptsMap[opt])
-            console.log('this.required: ', this.required);
+        // formatValidationRules() {
+        //     let validationRules = []
+        //     if (this.validationOptions.length) validationRules = this.validationOptions.map(opt => this.validationOptsMap[opt])
+        //     console.log('this.required: ', this.required);
+        //     if (this.required) {
+        //         if(!this.validationOptions.some(opt => opt === 'requiredRule')) validationRules.push(this.validationOptsMap['requiredRule'])
+        //     }
+        //     this.validationRulesFormat = [...this.validationRules, ...validationRules]
+        //     console.log('this.validationRulesFormat: ', this.validationRulesFormat);
+        // },
+        formatRules() {
+            let rules = []
+            if (this.rules?.length) rules = this.rules.map(opt => {
+                if (typeof opt === 'string') return this.validationOptsMap[opt]
+                return opt
+            })
             if (this.required) {
-                if(!this.validationOptions.some(opt => opt === 'requiredRule')) validationRules.push(this.validationOptsMap['requiredRule'])
+                if(!this.rules.some(opt => opt === 'requiredRule')) rules.push(this.validationOptsMap['requiredRule'])
             }
-            this.validationRulesFormat = [...this.validationRules, ...validationRules]
-            console.log('this.validationRulesFormat: ', this.validationRulesFormat);
+            this.rulesFormat = rules
+            console.log('this.rulesFormat: ', this.rulesFormat);
         },
         formatCreditCard(val) {
             let input = val.replace(/\D/g, "")
@@ -250,7 +264,7 @@ export default {
     },
     computed: {
         hasMultipleRequirements() {
-            return this.validationRulesFormat.length > 1
+            return this.rulesFormat.length > 1
         },
     },
 }

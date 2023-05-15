@@ -88,6 +88,10 @@ $ yarn add validation-vue
   </div>
 </template>
 <script>
+import VForm from './v-form.vue'
+import VInput from './v-input.vue'
+import VSelect from './v-select.vue'
+
 export default {
   data() {
     return {
@@ -97,7 +101,7 @@ export default {
     }
   },
   methods: {
-    handleFormSubmit(isValid) {
+    onSubmit(isValid) {
       // Handle form submission
       if (isValid) {
         // Perform actions for valid form
@@ -106,7 +110,12 @@ export default {
       }
     },
   },
-};
+  components: {
+    VForm,
+    VInput,
+    VSelect
+  }
+}
 </script>
 ```
 
@@ -135,17 +144,17 @@ app.mount('#app')
 $ npm start
 ```
 
-### Running the tests
+## Properties
 
-```sh
-$ npm test
-```
+Properties define the visual behavior of the library:
 
-### Building a distribution version
+| Property     | Type   | Default  | Description |
+| ------------ | ------ | -------- | ------------ |
+| :orientation | string | vertical | Orientation of the container. Can be horizontal or vertical. |
 
-```sh
-$ npm run build
-```
+## Contribution
+
+Contributions to the Validation-Vue package are welcome! If you find any issues or have suggestions for improvement, please open an issue on the [GitHub repository](https://github.com/Dvirco1234/validation-vue) or submit a pull request.
 
 This task will create a distribution version of the project inside your local `dist/` folder
 
