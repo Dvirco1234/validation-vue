@@ -65,7 +65,8 @@ export default {
     },
     data() {
         return {
-            selectedOption: { label: 'Choose', key: '' },
+            selectedOption: this.defaultOption,
+            // selectedOption: { label: 'Choose', key: '' },
             isOptionsShow: false,
             searchTerm: '',
             isValid: true,
@@ -85,6 +86,7 @@ export default {
             // if(this.isOptionsShow && this.isSearch && this.$refs.searchInput) this.$refs.searchInput.focus() 
         },
         closeOptions() {
+            if (!this.isOptionsShow) return // Because this function called when clickOutside. If i remove this condition validation will be this.isValid === true
             this.isOptionsShow = false
             this.searchTerm = ''
             if (this.hasOpened) this.validate()
@@ -98,6 +100,7 @@ export default {
             this.$emit('update:modelValue', option.key)
         },
         validate() {
+            console.log('here');
             if (!this.selectedOption.key && this.required) this.isValid = false
             else this.isValid = true
         },

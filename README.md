@@ -29,28 +29,24 @@ $ npm -v && node -v
 v8.16.0
 ``` -->
 
-## Table of contents
+## Table of Contents
 
-<!-- - [Validation Vue](#validation-vue)
-  - [Prerequisites](#prerequisites)
-  - [Table of contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-  - [Installation](#installation)
-  - [Usage](#usage)
-    - [Serving the app](#serving-the-app)
-    - [Running the tests](#running-the-tests)
-    - [Building a distribution version](#building-a-distribution-version)
-    - [Serving the distribution version](#serving-the-distribution-version)
-  - [API](#api)
-    - [useBasicFetch](#usebasicfetch)
-      - [Options](#options)
-    - [fetchData](#fetchdata)
-  - [Contributing](#contributing)
-  - [Credits](#credits)
-  - [Built With](#built-with)
-  - [Versioning](#versioning)
-  - [Authors](#authors)
-  - [License](#license) -->
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Local Usage](#local-usage)
+  - [Global Usage](#global-usage)
+  <!-- - [Serving the app](#serving-the-app) -->
+- [Form Events](#form-events)
+- [Properties](#properties)
+  - [Shared Properties](#shared-properties)
+  - [Input Properties](#input-properties)
+  - [Select Properties](#select-properties)
+- [Examples](#examples)
+- [Contribution](#contribution)
+- [Authors](#authors)
+- [License](#license)
 
 ## Getting Started
 
@@ -139,11 +135,11 @@ app.component('VSelect', VSelect)
 app.mount('#app')
 ```
 
-### Serving the app
+<!-- ### Serving the app
 
 ```sh
 $ npm start
-```
+``` -->
 ## Form Events
 
 The `<VForm>` component emits the following event:
@@ -158,7 +154,7 @@ The `<VForm>` component emits the following event:
 | ------------------ | ---------- | -------------- | ---------------------------------------------- |
 | `id`           | `String`    | **_required_**  | The unique identifier for the component.               |
 | `idx`          | `Number`    | **_required_**  | The index of the input element inside the form. This prop is best used in a `v-for` loop. If the input component is not inside a loop, you need to manually add the index.                            |
-| `required`         | `Boolean`  | `false`        | Indicates whether the input is required.                    |
+| `required`         | `Boolean`  | `false`        | Indicates whether the input / select is required.                    |
 | `primaryColor` | `String`    | `'#005FAA'`   | The primary color for the component.                    |
 | `errorColor`   | `String`    | `'#c10015'`   | The color to indicate an error state in the component.  |
 
@@ -171,8 +167,8 @@ Properties define the behavior of the `v-input` component:
 | `type`             | `String`   | `'text'`       | The type of input.                                          |
 | `placeholder`      | `String`   | `''`           | The placeholder text for the input.                         |
 | `label`            | `String`   | `''`           | The label text for the input.                               |
-| `rules`            | `Array`    | `[]`           | An array of validation rules.                               |
-| `asyncRule`        | `Function` | `null`         | An asynchronous validation rule function.                   |
+| `rules`            | `Array`    | `[]`           | The `rules` prop is an array of validation rules that can be applied to the input or select component. It allows you to specify various validation conditions to validate the entered value. The rules can be defined either as strings or as pointers to validation functions from the parent element. When using strings, you can provide names of pre-defined validation options such as 'required', 'email', 'cc' etc. These validation options represent common validation rules that can be applied to the input.   Alternatively, you can define custom validation rules using pointers to validation functions from the parent element. Each validation function should take the value as a parameter and return an object with two properties: `isValid` and `errorMessage`. `isValid` indicates whether the value passes the validation condition, and `errorMessage` provides the error message to display when the validation fails. Here's an example: rules: `[(value) => ({ isValid: /[A-Z]/.test(value), errorMessage: 'Password must contain at least 1 uppercase character' })] `                            |
+| `asyncRule`        | `Function` | `null`         | A pointer to an asynchronous validation function. Please refer to [Async Example](#async-example) below for an illustration of the `asyncRule` usage.                 |
 | `showValidIcon`    | `Boolean`  | `false`        | Indicates whether to show a valid icon.                     |
 | `showPasswordIcon` | `Boolean`  | `false`        | Indicates whether to show a password icon.                  |
 | `required`         | `Boolean`  | `false`        | Indicates whether the input is required.                    |
@@ -204,6 +200,39 @@ Properties define the behavior of the `v-select` component:
 | defaultOption  | Object    | { label: 'Choose', key: '' } | The default option for the select component.        |
 | isSearch       | Boolean   | false         | Determines if a search functionality should be enabled.    |
 
+
+## Examples
+
+#### Async Example
+
+```js
+<template>
+  <VInput :idx="0" id="input" v-model="name" :asyncRule="validateAsync"/>
+</template>
+<script>
+import { VInput } from 'validation-vue'
+export default {
+  data() {
+      return {
+          name: '',
+      }
+  },
+  methods: {
+  validateAsync(val) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({
+            isValid: val.includes('123'),
+            errorMessage: 'Username must include 123',
+          })
+      }, 2000)
+    })
+  },
+},
+  components: { VInput }
+}
+</script>
+```
 
 ## Contribution
 

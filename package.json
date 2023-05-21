@@ -1,6 +1,7 @@
 {
   "name": "validation-vue",
   "version": "0.1.0",
+  "types": "validation-vue.d.ts",
   "description": "",
 
   "main": "dist/validation-vue.ssr.js",

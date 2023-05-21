@@ -106,19 +106,19 @@ export default {
             inputMaxLength: this.maxLength,
             cardType: '',
             validationOptsMap: {
-                requiredRule: (val) => ({
+                required: (val) => ({
                     isValid: val && val.length ? true : false,
                     errorMessage: '',
                 }),
-                lengthRule: (val) => ({
+                length: (val) => ({
                     isValid: val.length >= this.minLength && val.length <= this.inputMaxLength,
                     errorMessage: 'Invalid value',
                 }),
-                emailRule: (val) => ({
+                email: (val) => ({
                     isValid: (/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val)),
                     errorMessage: 'Please enter a valid email address',
                 }),
-                ccRule: (val) => ({
+                cc: (val) => ({
                     isValid: this.isCcValid(val),
                     errorMessage: 'Invalid credit card number',
                 }),
@@ -178,8 +178,8 @@ export default {
                 if (typeof opt === 'string') return this.validationOptsMap[opt]
                 return opt
             })
-            if (this.required) rules.push(this.validationOptsMap['requiredRule'])
-            if (this.minLength || this.maxLength !== Infinity) rules.push(this.validationOptsMap['lengthRule'])
+            if (this.required) rules.push(this.validationOptsMap['required'])
+            if (this.minLength || this.maxLength !== Infinity) rules.push(this.validationOptsMap['length'])
             this.rulesFormat = [...new Set(rules)]
             console.log('this.rulesFormat: ', this.rulesFormat);
         },
