@@ -9,6 +9,7 @@ export default defineComponent({
   data() {
     return {
       name: '',
+      email: '',
       tryRule: (value) => ({
                 isValid: value.includes('123'),
                 // errorMessage: '',
@@ -29,9 +30,14 @@ export default defineComponent({
   <div id="app">
     <!-- <validation-vue-sample /> -->
     <v-form>
-      <v-input :idx="0" id="input" v-model="name" required :rules="['emailRule', tryRule, 'lengthRule', tryRule, 'requiredRule']" :maxLength="10"/>
-      <v-input :idx="0" id="input" v-model="name" :minLength="3"/>
-      <v-select :idx="1" id="select" v-model="count" :options="[1,2,3]" required/>
+      <div>
+        <section>
+          <v-input :idx="0" id="input" v-model="name" required :rules="['emailRule', tryRule, 'lengthRule', tryRule, 'requiredRule']" :maxLength="10"/>
+        </section>
+        <v-input :idx="2" id="input2" v-model="email" :minLength="3" required/>
+        <v-select :idx="1" id="select" v-model="count" :options="[1,2,3]" required/>
+        <button>save</button>
+      </div>
     </v-form>
     <v-select required :options="[1,2,3]" :idx="1" id="select"/>
   </div>

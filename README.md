@@ -19,7 +19,7 @@ Validation-Vue is a powerful Vue.js package that provides components for form va
 -   **Select Component:** The Select component is an enhanced custom select input with additional features. It not only allows users to select options from a dropdown but also provides a search functionality for easily finding desired options. It also supports validation to ensure a valid selection is made.
 -   **Extensibility:** The Validation-Vue package is designed to be easily extendable, allowing you to add more components and validation rules to suit your specific requirements. You can create your custom components and integrate them seamlessly into the validation framework.
 
-## Prerequisites
+<!-- ## Prerequisites
 
 This project requires NodeJS (version 8 or later) and NPM. [Node](http://nodejs.org/) and [NPM](https://npmjs.org/) are really easy to install. To make sure you have them available on your machine, try running the following command.
 
@@ -27,7 +27,7 @@ This project requires NodeJS (version 8 or later) and NPM. [Node](http://nodejs.
 $ npm -v && node -v
 6.4.1
 v8.16.0
-```
+``` -->
 
 ## Table of contents
 
@@ -58,7 +58,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Installation
 
-**BEFORE YOU INSTALL:** please read the [prerequisites](#prerequisites)
+<!-- **BEFORE YOU INSTALL:** please read the [prerequisites](#prerequisites) -->
 
 To install and set up the library, run:
 
@@ -83,7 +83,7 @@ my-component.vue
     <v-form @submitForm="onSubmit">
       <v-input :idx="0" id="input" v-model="name" required/>
       <v-select :idx="1" id="select" v-model="count" :options="[1, 2, 3]" required/>
-      <v-input :idx="2" id="input" v-model="email" required :validationRules="['emailRule']" />
+      <v-input :idx="2" id="input" v-model="email" :rules="['emailRule']" required />
       <button type="submit">Submit</button>
     </v-form>
   </div>
@@ -177,8 +177,8 @@ Properties define the behavior of the `v-input` component:
 | `showPasswordIcon` | `Boolean`  | `false`        | Indicates whether to show a password icon.                  |
 | `required`         | `Boolean`  | `false`        | Indicates whether the input is required.                    |
 | `isChecklist`      | `Boolean`  | `false`        | Indicates whether the input has a checklist of validations. |
-| `isDigitsOnly`     | `Boolean`  | `false`        | Indicates whether the input should accept only digits.      |
 | `isChecklistGrid`  | `Boolean`  | `true`         | Indicates whether to use a grid layout for checklist items. |
+| `isDigitsOnly`     | `Boolean`  | `false`        | Indicates whether the input should accept only digits.      |
 | `maxLength`        | `Number`   | `Infinity`     | The maximum number of characters allowed in the input.      |
 | `minLength`        | `Number`   | `0`            | The minimum number of characters required in the input.     |
 | `textareaRows`     | `Number`   | `0`            | The number of rows for a textarea input.                    |
@@ -190,7 +190,7 @@ Properties define the behavior of the `v-input` component:
 <!-- | `primaryColor`     | `String`   | `'#005faa'`    | The primary color used for styling.                         |
 | `txtColor`         | `String`   | `'#7B97AC'`    | The color of the label and input text.                      | -->
 
-### Input Properties
+### Select Properties
 
 Properties define the behavior of the `v-select` component:
 
