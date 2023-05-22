@@ -71,6 +71,7 @@ export default {
         type: { type: String, default: 'text' },
         placeholder: { type: String, default: '' },
         label: { type: String, default: '' },
+        // invalidTerm: { type: String, default: '' },
         showValidIcon: { type: Boolean, default: false },
         showPasswordIcon: { type: Boolean, default: false },
         required: { type: Boolean, default: false },
@@ -133,6 +134,9 @@ export default {
                     isValid: this.isCcValid(val),
                     errorMessage: 'Invalid credit card number',
                 }),
+                // invalidTerm: (val) => ({
+                //     isValid: this.invalidTerm !== val,
+                // }),
             },
         }
     },

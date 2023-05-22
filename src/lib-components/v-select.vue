@@ -156,6 +156,26 @@ export default {
 }
 </script>
 <style>
+::-webkit-scrollbar {
+  width: 6px;
+  height: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #bebebe;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #a7acaf;
+}
+
 .select-wrapper {
     position: relative;
     overflow: visible;

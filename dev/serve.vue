@@ -14,14 +14,39 @@
     </v-form> -->
     <v-form>
       <div class="wrapper">
-        <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" required
-          :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid />
+        <!-- <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" required
+          :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid /> -->
         <!-- <v-input :idx="1" id="field.keyName" label="field.label" v-model="model.password" required type="password"
           :rules="passwordRules" isChecklist showPasswordIcon /> -->
         <!-- <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="field.label" isChecklist :rules="['minLength:6', 'maxLength:10']"/>
         <v-select :idx="1" id="select" v-model="count" :options="[1, 2, 3]" required /> -->
-        <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >Submit</button>
+        <!-- <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >Submit</button> -->
       </div>
+
+
+
+      <!-- <article class="cc-details">
+        <v-input id="ccNumber" name="ccNumber" label="Credit card number" type="cc" placeholder="XXXX XXXX XXXX XXXX"
+          @checkIsVaild="setInputValidations" class="input" v-model="ccInfo.CC_number" :idx="0" required :rules="['cc']" showValidIcon />
+        <div class="ex-date flex">
+          <label class="ex-date-label">Expiry date<span style="color: #c10015">*</span></label>
+          <v-select id="expirationMonth" :idx="3" class="select"
+            :options="['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12',]" v-model="ccInfo.expiration_month"
+            :defaultOption="{ label: 'MM', key: '' }" selectLabel="month"
+            :class="{ required: hasSubmitted && !ccInfo.expiration_month && payment_type === 'credit_card' }" isInsideLabel />
+          <v-select id="expirationYear" :idx="4" class="select" :options="yearOptions" v-model="ccInfo.expiration_year"
+            :defaultOption="{ label: 'YY', key: '' }" selectLabel="year"
+            :class="{ required: hasSubmitted && !ccInfo.expiration_year && payment_type === 'credit_card' }" isInsideLabel />
+          <div class="cvv-wraper position-relative">
+            <label>CVV Code<span style="color: #c10015">*</span></label>
+            <v-input id="cvv" name="cvv" type="text" placeholder="CVV" class="input cvv" v-model="ccInfo.CVV" :idx="1" required isDigitsOnly
+              :maxLength="3" :rules="['length']" />
+            <img src="./cc.png" class="ccimg">
+          </div>
+        </div>
+        <v-input id="username" name="username" label="Name on Card" type="text" placeholder="Enter your username" class="input"
+          v-model="ccInfo.name_on_card" :idx="2" required />
+      </article> -->
     </v-form>
     <!-- <v-select required :options="[1,2,3]" :idx="1" id="select"/> -->
   </div>
@@ -36,6 +61,13 @@ export default defineComponent({
   name: 'ServeDev',
   data() {
     return {
+      ccInfo: {
+        CC_number: '',
+        expiration_year: '',
+        expiration_month: '',
+        CVV: '',
+        name_on_card: '',
+      },
       name: '',
       email: '',
       tryRule: (value) => ({
@@ -57,28 +89,32 @@ export default defineComponent({
         { label: 'Last name', keyName: 'lastName', type: 'text', isRequired: true, isFullLine: false, },
         { label: 'Country', keyName: 'contry', type: 'text', isRequired: true, isFullLine: false, },
         { label: 'Email', keyName: 'email', type: 'text', isRequired: true, isFullLine: false, rules: ['email'] },
-        { label: 'Password', keyName: 'password', type: 'password', isRequired: true, isFullLine: true, rules: [
-        (val) => ({
-          isValid: /[a-z]/.test(val),
-          errorMessage: '1 lowercase character',
-        }),
-        (val) => ({
-          isValid: /\d/.test(val),
-          errorMessage: '1 number',
-        }),
-        (val) => ({
-          isValid: /[A-Z]/.test(val),
-          errorMessage: '1 uppercase character',
-        }),
-        (val) => ({
-          isValid: val.length >= 8,
-          errorMessage: '8 characters minimum',
-        }),
-      ], isChecklist: true },
-        { label: 'Confirm Password', keyName: 'confirmPassword', type: 'password', isRequired: false, isFullLine: true, rules: [(value) => ({
-                isValid: value.length >= 8 && value === this.model.password,
-                errorMessage: 'Password confirmation does not match',
-            })] },
+        {
+          label: 'Password', keyName: 'password', type: 'password', isRequired: true, isFullLine: true, rules: [
+            (val) => ({
+              isValid: /[a-z]/.test(val),
+              errorMessage: '1 lowercase character',
+            }),
+            (val) => ({
+              isValid: /\d/.test(val),
+              errorMessage: '1 number',
+            }),
+            (val) => ({
+              isValid: /[A-Z]/.test(val),
+              errorMessage: '1 uppercase character',
+            }),
+            (val) => ({
+              isValid: val.length >= 8,
+              errorMessage: '8 characters minimum',
+            }),
+          ], isChecklist: true
+        },
+        {
+          label: 'Confirm Password', keyName: 'confirmPassword', type: 'password', isRequired: false, isFullLine: true, rules: [(value) => ({
+            isValid: value.length >= 8 && value === this.model.password,
+            errorMessage: 'Password confirmation does not match',
+          })]
+        },
         { label: 'Phone number', keyName: 'phone', type: 'phone', isRequired: true, isFullLine: true, },
       ],
       passwordRules: [
@@ -132,5 +168,78 @@ export default defineComponent({
   border-radius: 30px;
   font-size: 20px;
   font-family: almoni-bold, "Times New Roman", Times, serif;
+}
+
+ .top .cc-img {
+  height: 30px;
+  justify-self: flex-end;
+}
+
+ p {
+  margin: 0 0 5px 43px;
+}
+
+ .cc-details {
+  background-color: #F1F5F9;
+  padding: 40px;
+  min-width: 536px;
+}
+
+ .ex-date .cvv-wraper input {
+  height: 50.7px;
+}
+
+ .ex-date .cvv-wraper label {
+  position: absolute;
+  top: -26px;
+  left: 0;
+}
+
+ .ex-date .cvv-wraper .ccimg {
+  position: absolute;
+  top: 35%;
+  right: 11px;
+  translate: 0 -50%;
+}
+
+ .ex-date label {
+  font-size: 18px;
+  color: rgb(123, 151, 172);
+}
+
+ .ex-date .ex-date-label {
+  flex-basis: 100%;
+}
+
+ .select {
+  flex-basis: 25%;
+  max-width: 120px;
+}
+
+ .select.required .selected {
+  outline: 1px solid #c10015;
+  outline-offset: -1px;
+}
+
+.flex {
+  display: flex;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.input {
+    width: 50%;
+    margin: 20px;
+}
+.select {
+  flex-basis: 25%;
+  max-width: 120px;
+}
+
+.select.required .selected {
+  outline: 1px solid #c10015;
+  outline-offset: -1px;
 }
 </style>
