@@ -116,6 +116,14 @@ export default {
                     isValid: val.length >= this.inputMinLength && val.length <= this.inputMaxLength,
                     errorMessage: 'Invalid length',
                 }),
+                minLength: (val) => ({
+                    isValid: val.length >= this.inputMinLength,
+                    errorMessage: `${this.inputMinLength} characters minimum`,
+                }),
+                maxLength: (val) => ({
+                    isValid: val.length <= this.inputMaxLength,
+                    errorMessage: `${this.inputMaxLength} characters maximum`,
+                }),
                 email: (val) => ({
                     isValid: (/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val)),
                     errorMessage: 'Please enter a valid email address',
@@ -180,12 +188,21 @@ export default {
             let rules = []
             if (this.rules?.length) rules = this.rules.map(opt => {
                 console.log('opt: ', opt);
-                if (typeof opt === 'string') return this.validationOptsMap[opt]
+                if (typeof opt === 'string') {
+                    if (opt.includes('Length')) {
+                        const [ruleName, lengthValue] = opt.split(':')
+                        ruleName === 'minLength'? this.inputMinLength = parseInt(lengthValue) : this.inputMaxLength = parseInt(lengthValue)
+                        return this.validationOptsMap[ruleName]
+                    }
+                    return this.validationOptsMap[opt]
+                }
                 return opt
             })
             console.log('rules: ', rules);
             if (this.required && !this.isChecklist) rules.push(this.validationOptsMap['required'])
-            if (this.minLength || this.maxLength !== Infinity) rules.push(this.validationOptsMap['length'])
+            // if (this.minLength || this.maxLength !== Infinity) rules.push(this.validationOptsMap['length'])
+            if (this.minLength) rules.push(this.validationOptsMap['minLength'])
+            if (this.maxLength !== Infinity) rules.push(this.validationOptsMap['maxLength'])
             this.rulesFormat = [...new Set(rules)]
         },
         formatCreditCard(val) {
