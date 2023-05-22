@@ -53,5 +53,14 @@
   },
   "engines": {
     "node": ">=12"
-  }
+  },
+  "keywords": [
+    "form",
+    "validation",
+    "vue",
+    "Vue.js",
+    "select",
+    "input"
+  ],
+  "license": "MIT"
 }
