@@ -88,7 +88,8 @@ export default {
         // errorMessage: { type: String, default: 'This field is required' },
         errorColor: { type: String, default: '#c10015' },
         validColor: { type: String, default: '#7CB261' },
-        primaryColor: { type: String, default: '#005faa' },
+        // primaryColor: { type: String, default: '#005faa' },
+        primaryColor: { type: String, default: '#7b97ac' },
         txtColor: { type: String, default: '#7B97AC' },
         placeholderColor: { type: String, default: '#7B97AC' },
 

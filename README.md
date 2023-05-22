@@ -50,7 +50,7 @@ v16.15.1
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Follow these steps to get started with the project:
 
 ## Installation
 
@@ -153,7 +153,7 @@ The `<VForm>` component emits the following event:
 | `id`           | `String`    | **_required_**  | The unique identifier for the component.               |
 | `idx`          | `Number`    | **_required_**  | The index of the input element inside the form. This prop is best used in a `v-for` loop. If the input component is not inside a loop, you need to manually add the index.                            |
 | `required`         | `Boolean`  | `false`        | Indicates whether the input / select is required.                    |
-| `primaryColor` | `String`    | `'#005FAA'`   | The primary color for the component.                    |
+| `primaryColor` | `String`    | `'#005FAA'`   | The primary color for the field. For example, you can use this color to change the color of the show-password icon.                     |
 | `errorColor`   | `String`    | `'#c10015'`   | The color to indicate an error state in the component.  |
 
 ### Input Properties
