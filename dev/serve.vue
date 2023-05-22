@@ -14,13 +14,13 @@
     </v-form> -->
     <v-form>
       <div class="wrapper">
-        <!-- <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :label="field.label" v-model="model[field.keyName]" required
-          :rules="field.rules" :isChecklist="field.isChecklist" :showPasswordIcon="field.type === 'password'" isChecklistGrid /> -->
-        <!-- <v-input :idx="1" id="field.keyName" label="field.label" v-model="model.password" required
+        <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" required
+          :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid />
+        <!-- <v-input :idx="1" id="field.keyName" label="field.label" v-model="model.password" required type="password"
           :rules="passwordRules" isChecklist showPasswordIcon /> -->
-        <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="field.label" isChecklist :rules="['minLength:6', 'maxLength:10']"/>
-        <v-select :idx="1" id="select" v-model="count" :options="[1, 2, 3]" required />
-        <button class="submit-btn" style="font-family: sans-serif;">Submit</button>
+        <!-- <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="field.label" isChecklist :rules="['minLength:6', 'maxLength:10']"/>
+        <v-select :idx="1" id="select" v-model="count" :options="[1, 2, 3]" required /> -->
+        <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >Submit</button>
       </div>
     </v-form>
     <!-- <v-select required :options="[1,2,3]" :idx="1" id="select"/> -->
@@ -56,7 +56,7 @@ export default defineComponent({
         { label: 'First name', keyName: 'firstName', type: 'text', isRequired: true, isFullLine: false, },
         { label: 'Last name', keyName: 'lastName', type: 'text', isRequired: true, isFullLine: false, },
         { label: 'Country', keyName: 'contry', type: 'text', isRequired: true, isFullLine: false, },
-        { label: 'Email', keyName: 'email', type: 'text', isRequired: true, isFullLine: false, rules: ['emailRule'] },
+        { label: 'Email', keyName: 'email', type: 'text', isRequired: true, isFullLine: false, rules: ['email'] },
         { label: 'Password', keyName: 'password', type: 'password', isRequired: true, isFullLine: true, rules: [
         (val) => ({
           isValid: /[a-z]/.test(val),

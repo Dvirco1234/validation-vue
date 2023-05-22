@@ -15,7 +15,6 @@ export default {
     created() { },
     methods: {
         setInputValidations({ isValid, idx, ref, validate }) {
-            console.log('{ isValid, idx, ref, validate }: ', { isValid, idx, ref, validate });
             this.inputValidations[idx] = { isValid, ref, validate }
         },
         // isFormValid() {

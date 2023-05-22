@@ -6,7 +6,7 @@
                 @input="handleInput($event.target.value)" @blur="validate()" :value="modelValue"
                 :style="{ 'outline-color': showErrorMessage ? errorColor : '' }" ></textarea>
             <input v-else :ref="'ref' + id" :id="id" :name="id" :type="isPasswordShown || type === 'cc' ? 'text' : type" :placeholder="placeholder"
-                :maxlength="inputMaxLength" @input="handleInput($event.target.value)" @blur="validate()" :value="modelValue"
+                :maxlength="inputMaxLength" @input="handleInput($event.target.value)" @blur="validate()" :value="modelValue" autocomplete="off"
                 :style="{ 'outline-color': showErrorMessage ? errorColor : showValidIcon && isValid ? validColor : '', 'padding-inline-start': showPasswordIcon && type === 'password' ? '42px' : '' }" />
             <div class="valid-icon-wrapper">
                 <span v-if="!showErrorMessage && isValid && showValidIcon" class="icon success-icon">
@@ -139,13 +139,13 @@ export default {
         this.formatRules()
         if (this.isChecklist) this.validateChecklist()
     },
-    mounted() {
+    async mounted() {
         console.log('this.$parent: ', this.$parent);
-        const { isValid } = this.checkValidation()
+        const { isValid } = await this.checkValidation()
         if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
     },
     methods: {
-        handleInput(value) {
+        async handleInput(value) {
             if (this.isDigitsOnly) value = value.replace(/\D/g, '')
             if (this.type === 'cc') value = this.formatCreditCard(value)
             if (this.asyncRule) this.isBlured = true
@@ -154,7 +154,7 @@ export default {
             this.$emit('update:modelValue', value)
             let isValid 
             if (this.isBlured || value.length === this.inputMaxLength) ({ isValid } = this.validate())
-            else ({ isValid } = this.checkValidation())
+            else ({ isValid } = await this.checkValidation())
             if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
         },
         async validate() {
@@ -187,7 +187,6 @@ export default {
         formatRules() {
             let rules = []
             if (this.rules?.length) rules = this.rules.map(opt => {
-                console.log('opt: ', opt);
                 if (typeof opt === 'string') {
                     if (opt.includes('Length')) {
                         const [ruleName, lengthValue] = opt.split(':')
@@ -198,11 +197,11 @@ export default {
                 }
                 return opt
             })
-            console.log('rules: ', rules);
             if (this.required && !this.isChecklist) rules.push(this.validationOptsMap['required'])
             // if (this.minLength || this.maxLength !== Infinity) rules.push(this.validationOptsMap['length'])
             if (this.minLength) rules.push(this.validationOptsMap['minLength'])
             if (this.maxLength !== Infinity) rules.push(this.validationOptsMap['maxLength'])
+            rules = rules.filter(r => r)
             this.rulesFormat = [...new Set(rules)]
         },
         formatCreditCard(val) {

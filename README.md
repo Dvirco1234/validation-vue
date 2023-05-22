@@ -85,9 +85,7 @@ my-component.vue
   </div>
 </template>
 <script>
-import VForm from './v-form.vue'
-import VInput from './v-input.vue'
-import VSelect from './v-select.vue'
+import { VInput, VSelect, VForm } from 'validation-vue'
 
 export default {
   data() {
@@ -203,6 +201,8 @@ Properties define the behavior of the `v-select` component:
 
 
 ## Examples
+
+![Form example GIF](https://github.com/Dvirco1234/validation-vue/blob/main/Form%20example.gif)
 
 #### Async Example
 
