@@ -14,10 +14,13 @@
     </v-form> -->
     <v-form>
       <div class="wrapper">
-        <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" v-model="name" required :rules="['email', tryRule, 'length', tryRule, 'required']" :maxLength="10" />
-        <v-input :idx="2" id="input2" v-model="email" :minLength="3" required />
-        <v-select :idx="1" id="select" v-model="count" :options="[1, 2, 3]" required />
-        <button class="submit-btn">Submit</button>
+        <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :label="field.label" v-model="model[field.keyName]" required
+          :rules="field.rules" :isChecklist="field.isChecklist" :showPasswordIcon="field.type === 'password'" isChecklistGrid />
+        <!-- <v-input :idx="1" id="field.keyName" label="field.label" v-model="model.password" required
+          :rules="passwordRules" isChecklist showPasswordIcon /> -->
+        <!-- <v-input :idx="2" id="input2" v-model="email" :minLength="3" required />
+        <v-select :idx="1" id="select" v-model="count" :options="[1, 2, 3]" required /> -->
+        <button class="submit-btn" style="font-family: sans-serif;">Submit</button>
       </div>
     </v-form>
     <!-- <v-select required :options="[1,2,3]" :idx="1" id="select"/> -->
@@ -40,13 +43,42 @@ export default defineComponent({
         // errorMessage: '',
         errorMessage: 'Username must include 123',
       }),
+      model: {
+        firstName: '',
+        lastName: '',
+        contry: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        phone: '',
+      },
       fields: [
         { label: 'First name', keyName: 'firstName', type: 'text', isRequired: true, isFullLine: false, },
         { label: 'Last name', keyName: 'lastName', type: 'text', isRequired: true, isFullLine: false, },
         { label: 'Country', keyName: 'contry', type: 'text', isRequired: true, isFullLine: false, },
-        { label: 'Business Email', keyName: 'email', type: 'text', isRequired: true, isFullLine: false, validationOptions: ['emailRule'] },
-        { label: 'Password', keyName: 'password', type: 'password', isRequired: true, isFullLine: true, rules: this.passwordRules, isChecklist: true },
-        { label: 'Confirm Password', keyName: 'confirmPassword', type: 'password', isRequired: false, isFullLine: true, rules: [this.confirmPasswordRule] },
+        { label: 'Email', keyName: 'email', type: 'text', isRequired: true, isFullLine: false, rules: ['emailRule'] },
+        { label: 'Password', keyName: 'password', type: 'password', isRequired: true, isFullLine: true, rules: [
+        (val) => ({
+          isValid: /[a-z]/.test(val),
+          errorMessage: '1 lowercase character',
+        }),
+        (val) => ({
+          isValid: /\d/.test(val),
+          errorMessage: '1 number',
+        }),
+        (val) => ({
+          isValid: /[A-Z]/.test(val),
+          errorMessage: '1 uppercase character',
+        }),
+        (val) => ({
+          isValid: val.length >= 8,
+          errorMessage: '8 characters minimum',
+        }),
+      ], isChecklist: true },
+        { label: 'Confirm Password', keyName: 'confirmPassword', type: 'password', isRequired: false, isFullLine: true, rules: [(value) => ({
+                isValid: value.length >= 8 && value === this.model.password,
+                errorMessage: 'Password confirmation does not match',
+            })] },
         { label: 'Phone number', keyName: 'phone', type: 'phone', isRequired: true, isFullLine: true, },
       ],
       passwordRules: [

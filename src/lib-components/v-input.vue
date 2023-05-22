@@ -1,6 +1,6 @@
 <template>
     <section>
-        <label :for="id" :style="{ color: txtColor }">{{ label }}<span v-if="required && label" :style="{ color: errorColor }">*</span></label>
+        <label :for="id" :style="{ color: txtColor }">{{ label }}<span v-if="required && label && !hideAsterisk" :style="{ color: errorColor }">*</span></label>
         <div class="input-wrapper" :class="{ mb: !checklist }" :style="{ '--placeholder-color': placeholderColor }">
             <textarea v-if="textareaRows" :rows="textareaRows" :ref="'ref' + id" :id="id" :name="id" :placeholder="placeholder"
                 @input="handleInput($event.target.value)" @blur="validate()" :value="modelValue"
@@ -76,7 +76,8 @@ export default {
         required: { type: Boolean, default: false },
         isChecklist: { type: Boolean, default: false },
         isDigitsOnly: { type: Boolean, default: false },
-        isChecklistGrid: { type: Boolean, default: true },
+        hideAsterisk: { type: Boolean, default: false },
+        isChecklistGrid: { type: Boolean, default: false },
         // TODO: add option for string and then parseInt
         maxLength: { type: Number, default: Infinity },
         minLength: { type: Number, default: 0 },
@@ -103,16 +104,17 @@ export default {
             errorMessage: '',
             checklist: null,
             isPasswordShown: false,
+            inputMinLength: this.minLength,
             inputMaxLength: this.maxLength,
             cardType: '',
             validationOptsMap: {
                 required: (val) => ({
                     isValid: val && val.length ? true : false,
-                    errorMessage: '',
+                    errorMessage: 'Required Field',
                 }),
                 length: (val) => ({
-                    isValid: val.length >= this.minLength && val.length <= this.inputMaxLength,
-                    errorMessage: 'Invalid value',
+                    isValid: val.length >= this.inputMinLength && val.length <= this.inputMaxLength,
+                    errorMessage: 'Invalid length',
                 }),
                 email: (val) => ({
                     isValid: (/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val)),
@@ -157,6 +159,7 @@ export default {
             return { isValid }
         },
         async checkValidation() {
+            console.log('this.rulesFormat: ', this.rulesFormat);
             let validationResult = this.rulesFormat.reduce((acc, validationRule) => {
                 if (!acc.isValid) return acc
                 const { isValid, errorMessage } = validationRule(this.inputValue)
@@ -168,6 +171,7 @@ export default {
         validateChecklist() {
             this.isBlured = true
             this.checklist = this.rulesFormat.map(validationRule => validationRule(this.inputValue))
+            console.log('this.checklist: ', this.checklist);
         },
         togglePasswordShown() {
             this.isPasswordShown = !this.isPasswordShown
@@ -175,13 +179,14 @@ export default {
         formatRules() {
             let rules = []
             if (this.rules?.length) rules = this.rules.map(opt => {
+                console.log('opt: ', opt);
                 if (typeof opt === 'string') return this.validationOptsMap[opt]
                 return opt
             })
-            if (this.required) rules.push(this.validationOptsMap['required'])
+            console.log('rules: ', rules);
+            if (this.required && !this.isChecklist) rules.push(this.validationOptsMap['required'])
             if (this.minLength || this.maxLength !== Infinity) rules.push(this.validationOptsMap['length'])
             this.rulesFormat = [...new Set(rules)]
-            console.log('this.rulesFormat: ', this.rulesFormat);
         },
         formatCreditCard(val) {
             let input = val.replace(/\D/g, "")
@@ -260,6 +265,7 @@ export default {
 
 label {
     font-size: 18px;
+    font-family: sans-serif;
 }
 
 .input-wrapper input, textarea {
@@ -361,5 +367,13 @@ span.icon {
 .checklist span {
     translate: 0 1px;
     font-size: 16px;
+    font-family: sans-serif;
+}
+
+.flex {
+    display: flex;
+}
+.align-center {
+    align-items: center;
 }
 </style>
