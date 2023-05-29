@@ -145,10 +145,7 @@ export default {
         if (this.isChecklist) this.validateChecklist()
     },
     async mounted() {
-        // console.log('this.$parent: ', this.$parent);
-        // console.log('this.$refs[ref + this.id]: ', this.$refs['ref' + this.id]);
         const { isValid } = await this.checkValidation()
-        // if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
         if (this.required && this.$parent.setInputValidations) {
             this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate })
             this.$parent.setOrder(this.id)
@@ -165,7 +162,6 @@ export default {
             let isValid = false
             if (this.isBlured || value.length === this.inputMaxLength) ({ isValid } = await this.validate())
             else ({ isValid } = await this.checkValidation())
-            // if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
             if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate })
         },
         async validate() {
@@ -178,7 +174,6 @@ export default {
             return { isValid }
         },
         async checkValidation() {
-            // console.log('this.rulesFormat: ', this.rulesFormat);
             let validationResult = this.rulesFormat.reduce((acc, validationRule) => {
                 if (!acc.isValid) return acc
                 const { isValid, errorMessage } = validationRule(this.inputValue)
@@ -190,7 +185,6 @@ export default {
         validateChecklist() {
             this.isBlured = true
             this.checklist = this.rulesFormat.map(validationRule => validationRule(this.inputValue))
-            // console.log('this.checklist: ', this.checklist);
         },
         togglePasswordShown() {
             this.isPasswordShown = !this.isPasswordShown
@@ -209,7 +203,6 @@ export default {
                 return opt
             })
             if (this.required && !this.isChecklist) rules.push(this.validationOptsMap['required'])
-            // if (this.minLength || this.maxLength !== Infinity) rules.push(this.validationOptsMap['length'])
             if (this.minLength) rules.push(this.validationOptsMap['minLength'])
             if (this.maxLength !== Infinity) rules.push(this.validationOptsMap['maxLength'])
             rules = rules.filter(r => r)

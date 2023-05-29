@@ -38,7 +38,6 @@ export default {
     name: 'VSelect',
     props: {
         id: { type: String, required: true },
-        // idx: { type: Number, required: true },
         options: {
             type: Array,
             default: () => []
@@ -67,7 +66,6 @@ export default {
     data() {
         return {
             selectedOption: this.defaultOption,
-            // selectedOption: { label: 'Choose', key: '' },
             isOptionsShow: false,
             searchTerm: '',
             isValid: true,
@@ -76,8 +74,6 @@ export default {
     },
     mounted() {
         this.selectedOption = this.optionsFormat.find((option) => option.key === this.modelValue) || this.defaultOption
-        // if (this.required) this.$emit('checkIsVaild', { isValid: this.selectedOption.key, idx: this.idx, ref: this.$refs[this.id], validate: this.validate })
-        // if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid: this.selectedOption.key, idx: this.idx, validate: this.validate })
         if (this.required && this.$parent.setInputValidations) {
             this.$parent.setInputValidations({ isValid: this.selectedOption.key, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate })
             this.$parent.setOrder(this.id)
@@ -87,22 +83,17 @@ export default {
         toggleOptions() {
             this.hasOpened = true
             this.isOptionsShow = !this.isOptionsShow
-            // console.log('this.$refs.searchInput: ', this.$refs.searchInput)
-            // if(this.isOptionsShow && this.isSearch && this.$refs.searchInput) this.$refs.searchInput.focus() 
         },
         closeOptions() {
             if (!this.isOptionsShow) return // Because this function called when clickOutside. If i remove this condition validation will be this.isValid === true
             this.isOptionsShow = false
             this.searchTerm = ''
             if (this.hasOpened) this.validate()
-            // if (this.required) this.$emit('checkIsVaild', { isValid: this.isValid, idx: this.idx, ref: this.$refs[this.id], validate: this.validate })
-            // if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid: this.isValid, idx: this.idx, validate: this.validate })
             if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid: this.isValid, id: this.id, validate: this.validate })
         },
         selectOption(option) {
             this.selectedOption = option
             this.closeOptions()
-            // this.$emit('change', option.key)
             this.$emit('update:modelValue', option.key)
         },
         validate() {
@@ -135,11 +126,6 @@ export default {
             }
             return options
         },
-        // optionsFormat() {
-        //     if (!this.options || !this.options.length) return []
-        //     if (typeof this.options[0] === 'object') return this.options
-        //     else return this.options.map(o => ({ label: o, key: o }))
-        // },
     },
     directives: {
         ClickOutside: {
