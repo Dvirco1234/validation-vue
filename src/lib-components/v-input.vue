@@ -162,7 +162,7 @@ export default {
             this.$refs['ref' + this.id].value = value
             this.inputValue = value
             this.$emit('update:modelValue', value)
-            let isValid 
+            let isValid = false
             if (this.isBlured || value.length === this.inputMaxLength) ({ isValid } = await this.validate())
             else ({ isValid } = await this.checkValidation())
             // if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
