@@ -1,6 +1,7 @@
 <template>
     <article class="select-wrapper">
-        <label v-if="!isInsideLabel && selectLabel" class="select-label">{{ selectLabel }}<span v-if="required" style=" color: #c10015;">*</span></label>
+        <label v-if="!isInsideLabel && selectLabel" class="select-label">{{ selectLabel }}<span v-if="required"
+                style=" color: #c10015;">*</span></label>
         <div class="options-wrapper" v-click-outside="closeOptions">
             <!-- <div class="selected" @click="toggleOptions" v-click-outside="closeOptions" :class="{ open: isOptionsShow }" -->
             <div class="selected" @click="toggleOptions" :class="{ open: isOptionsShow }"
@@ -76,7 +77,11 @@ export default {
     mounted() {
         this.selectedOption = this.optionsFormat.find((option) => option.key === this.modelValue) || this.defaultOption
         // if (this.required) this.$emit('checkIsVaild', { isValid: this.selectedOption.key, idx: this.idx, ref: this.$refs[this.id], validate: this.validate })
-        if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid: this.selectedOption.key, idx: this.idx, validate: this.validate })
+        // if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid: this.selectedOption.key, idx: this.idx, validate: this.validate })
+        if (this.required && this.$parent.setInputValidations) {
+            this.$parent.setInputValidations({ isValid: this.selectedOption.key, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate })
+            this.$parent.setOrder(this.id)
+        }
     },
     methods: {
         toggleOptions() {
@@ -91,7 +96,8 @@ export default {
             this.searchTerm = ''
             if (this.hasOpened) this.validate()
             // if (this.required) this.$emit('checkIsVaild', { isValid: this.isValid, idx: this.idx, ref: this.$refs[this.id], validate: this.validate })
-            if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid: this.isValid, idx: this.idx, validate: this.validate })
+            // if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid: this.isValid, idx: this.idx, validate: this.validate })
+            if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid: this.isValid, id: this.id, validate: this.validate })
         },
         selectOption(option) {
             this.selectedOption = option
@@ -100,7 +106,6 @@ export default {
             this.$emit('update:modelValue', option.key)
         },
         validate() {
-            console.log('here');
             if (!this.selectedOption.key && this.required) this.isValid = false
             else this.isValid = true
         },
@@ -157,23 +162,23 @@ export default {
 </script>
 <style>
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 3px;
+    width: 6px;
+    height: 3px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+    background: #f1f1f1;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #bebebe;
+    background: #bebebe;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #a7acaf;
+    background: #a7acaf;
 }
 
 .select-wrapper {
@@ -296,5 +301,4 @@ export default {
 .select-wrapper .options-wrapper .options .option.no-options:hover {
     background-color: #fff;
 }
-
 </style>

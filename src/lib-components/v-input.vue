@@ -145,9 +145,14 @@ export default {
         if (this.isChecklist) this.validateChecklist()
     },
     async mounted() {
-        console.log('this.$parent: ', this.$parent);
+        // console.log('this.$parent: ', this.$parent);
+        // console.log('this.$refs[ref + this.id]: ', this.$refs['ref' + this.id]);
         const { isValid } = await this.checkValidation()
-        if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
+        // if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
+        if (this.required && this.$parent.setInputValidations) {
+            this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate })
+            this.$parent.setOrder(this.id)
+        }
     },
     methods: {
         async handleInput(value) {
@@ -158,9 +163,10 @@ export default {
             this.inputValue = value
             this.$emit('update:modelValue', value)
             let isValid 
-            if (this.isBlured || value.length === this.inputMaxLength) ({ isValid } = this.validate())
+            if (this.isBlured || value.length === this.inputMaxLength) ({ isValid } = await this.validate())
             else ({ isValid } = await this.checkValidation())
-            if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
+            // if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, idx: this.idx, ref: this.$refs['ref' + this.id], validate: this.validate })
+            if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate })
         },
         async validate() {
             this.isBlured = true
@@ -172,7 +178,7 @@ export default {
             return { isValid }
         },
         async checkValidation() {
-            console.log('this.rulesFormat: ', this.rulesFormat);
+            // console.log('this.rulesFormat: ', this.rulesFormat);
             let validationResult = this.rulesFormat.reduce((acc, validationRule) => {
                 if (!acc.isValid) return acc
                 const { isValid, errorMessage } = validationRule(this.inputValue)
@@ -184,7 +190,7 @@ export default {
         validateChecklist() {
             this.isBlured = true
             this.checklist = this.rulesFormat.map(validationRule => validationRule(this.inputValue))
-            console.log('this.checklist: ', this.checklist);
+            // console.log('this.checklist: ', this.checklist);
         },
         togglePasswordShown() {
             this.isPasswordShown = !this.isPasswordShown

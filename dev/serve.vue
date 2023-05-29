@@ -16,11 +16,12 @@
       <div class="wrapper">
         <!-- <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" required
           :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid /> -->
-        <!-- <v-input :idx="1" id="field.keyName" label="field.label" v-model="model.password" required type="password"
-          :rules="passwordRules" isChecklist showPasswordIcon /> -->
-        <!-- <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="field.label" isChecklist :rules="['minLength:6', 'maxLength:10']"/>
-        <v-select :idx="1" id="select" v-model="count" :options="[1, 2, 3]" required /> -->
-        <!-- <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >Submit</button> -->
+        <v-input :idx="1" id="field" label="field.label" v-model="model.password" required type="password"
+          :rules="passwordRules"  showPasswordIcon />
+        <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="field.label"  :rules="['minLength:6', 'maxLength:10']"/>
+        <v-select :idx="3" id="select" v-model="count" :options="[1, 2, 3]" required />
+        <v-input :idx="4" id="input3" v-model="email" :minLength="3" required label="field.label"  :rules="['minLength:6', 'maxLength:10']"/>
+        <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >Submit</button>
       </div>
 
 
