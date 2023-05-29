@@ -38,7 +38,7 @@ export default {
     name: 'VSelect',
     props: {
         id: { type: String, required: true },
-        idx: { type: Number, required: true },
+        // idx: { type: Number, required: true },
         options: {
             type: Array,
             default: () => []

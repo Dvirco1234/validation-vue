@@ -148,10 +148,10 @@ The `<VForm>` component emits the following event:
 
 ### Shared Properties
 
+<!-- | `idx`          | `Number`    | **_required_**  | The index of the input element inside the form. This prop is best used in a `v-for` loop. If the input component is not inside a loop, you need to manually add the index.                            | -->
 | Property           | Type       | Default        | Description                                    |
 | ------------------ | ---------- | -------------- | ---------------------------------------------- |
 | `id`           | `String`    | **_required_**  | The unique identifier for the component.               |
-| `idx`          | `Number`    | **_required_**  | The index of the input element inside the form. This prop is best used in a `v-for` loop. If the input component is not inside a loop, you need to manually add the index.                            |
 | `required`         | `Boolean`  | `false`        | Indicates whether the input / select is required.                    |
 | `primaryColor` | `String`    | `'#005FAA'`   | The primary color for the field. For example, you can use this color to change the color of the show-password icon.                     |
 | `errorColor`   | `String`    | `'#c10015'`   | The color to indicate an error state in the component.  |

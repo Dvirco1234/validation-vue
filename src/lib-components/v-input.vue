@@ -67,7 +67,7 @@ export default {
     name: 'VInput',
     props: {
         id: { type: String, required: true },
-        idx: { type: Number, required: true },
+        // idx: { type: Number, required: true },
         type: { type: String, default: 'text' },
         placeholder: { type: String, default: '' },
         label: { type: String, default: '' },
