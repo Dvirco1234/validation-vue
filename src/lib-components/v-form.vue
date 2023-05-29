@@ -54,7 +54,7 @@ export default {
                     // if (firstInvalid.ref) input.ref.focus()
                 }
             }
-            if (firstInvalid.ref) firstInvalid.ref.focus()
+            if (firstInvalid?.ref) firstInvalid.ref.focus()
             return isValid
         },
         async onSubmit(ev) {
@@ -62,7 +62,8 @@ export default {
             ev.stopPropagation()
             const isValid = await this.isFormValid()
             // this.$emit('submit', isValid)
-            this.$emit('submitForm', isValid)
+            // this.$emit('submitForm', isValid)
+            this.$emit('submitForm', {event: ev, isValid})
         }
     },
     // mounted() {

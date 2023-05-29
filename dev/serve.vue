@@ -12,10 +12,10 @@
         <button>save</button>
       </div>
     </v-form> -->
-    <v-form>
+    <v-form @submitForm="sub">
       <div class="wrapper">
-        <!-- <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" required
-          :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid /> -->
+        <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" required
+          :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid />
         <v-input :idx="1" id="field" label="field.label" v-model="model.password" required type="password"
           :rules="passwordRules"  showPasswordIcon />
         <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="field.label"  :rules="['minLength:6', 'maxLength:10']"/>
@@ -136,6 +136,12 @@ export default defineComponent({
           errorMessage: '8 characters minimum',
         }),
       ],
+    }
+  },
+  methods: {
+    sub(ev) {
+      console.log('ev: ', ev);
+
     }
   },
   components: {

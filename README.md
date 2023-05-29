@@ -96,7 +96,11 @@ export default {
     }
   },
   methods: {
-    onSubmit(isValid) {
+    onSubmit({ isValid, event }) { 
+      // @param {Object} - Destructured object containing the following properties:
+      // - isValid {boolean} - Flag indicating whether the form is valid or not
+      // - event {Event} - The submit event object
+
       // Handle form submission
       if (isValid) {
         // Perform actions for valid form
