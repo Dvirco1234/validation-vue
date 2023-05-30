@@ -42,7 +42,7 @@
                     </svg>
                 </span>
             </div>
-            <div class="error-message" :class="{ hide: !showErrorMessage }" :style="{ color: errorColor }">{{ errorMessage }}</div>
+            <div v-if="!isChecklist" class="error-message" :class="{ hide: !showErrorMessage }" :style="{ color: errorColor }">{{ errorMessage }}</div>
         </div>
         <article v-if="checklist" class="checklist" :class="{ grid: isChecklistGrid }" :style="{ color: txtColor }">
             <div v-for="(check, idx) in checklist" :key="`${checklist.errorMessage}-${idx}`" class="list flex align-center">
@@ -160,8 +160,12 @@ export default {
             this.inputValue = value
             this.$emit('update:modelValue', value)
             let isValid = false
-            if (this.isBlured || value.length === this.inputMaxLength) ({ isValid } = await this.validate())
-            else ({ isValid } = await this.checkValidation())
+            // try {
+                if (this.isBlured || value.length === this.inputMaxLength) ({ isValid } = await this.validate())
+                else ({ isValid } = await this.checkValidation())
+            // } catch (error) {
+            //     isValid = false
+            // }
             if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate })
         },
         async validate() {
@@ -180,11 +184,13 @@ export default {
                 return { isValid, errorMessage }
             }, { isValid: true, errorMessage: '' })
             if (this.asyncRule) validationResult = await this.asyncRule(this.inputValue)
+            // return this.isChecklist ? { ...validationResult, errorMessage: '' } : validationResult
             return validationResult
         },
         validateChecklist() {
             this.isBlured = true
             this.checklist = this.rulesFormat.map(validationRule => validationRule(this.inputValue))
+            return { isValid: this.checklist.some(li => !li.isValid) }
         },
         togglePasswordShown() {
             this.isPasswordShown = !this.isPasswordShown

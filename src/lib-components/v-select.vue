@@ -2,9 +2,9 @@
     <article class="select-wrapper">
         <label v-if="!isInsideLabel && selectLabel" class="select-label">{{ selectLabel }}<span v-if="required"
                 style=" color: #c10015;">*</span></label>
-        <div class="options-wrapper" v-click-outside="closeOptions">
+        <div class="options-wrapper" v-click-outside="closeOptions" :class="{ above: isOptionsAbove }">
             <!-- <div class="selected" @click="toggleOptions" v-click-outside="closeOptions" :class="{ open: isOptionsShow }" -->
-            <div class="selected" @click="toggleOptions" :class="{ open: isOptionsShow }"
+            <div class="selected" @click="toggleOptions" :class="{ open: isOptionsShow }" ref="selectElement"
                 :style="{ 'background-color': bgColor, borderColor: isValid ? '' : errorColor }">
                 <div class="flex flex-column flex-1">
                     <label v-if="isInsideLabel && selectLabel" class="select-label">{{ selectLabel }}</label>
@@ -20,7 +20,7 @@
                 <div class="error-message" :class="{ hide: isValid }" :style="{ color: errorColor }">Please choose {{ selectLabel ?
                     selectLabel.toLowerCase() : '' }}</div>
             </div>
-            <div class="options" :class="{ hide: !isOptionsShow, open: isOptionsShow }">
+            <div class="options" :class="{ hide: !isOptionsShow, open: isOptionsShow }" ref="optionsDropdown">
                 <div v-for="(option, index) in optionsFormat" :key="option.key + index" class="option"
                     :class="{ 'seperator-option': option.key === '$seperator' }" @click="selectOption(option)">
                     <span v-if="option.key === '$seperator'"></span>
@@ -70,6 +70,7 @@ export default {
             searchTerm: '',
             isValid: true,
             hasOpened: false,
+            isOptionsAbove: false,
         }
     },
     mounted() {
@@ -78,10 +79,13 @@ export default {
             this.$parent.setInputValidations({ isValid: this.selectedOption.key, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate })
             this.$parent.setOrder(this.id)
         }
+        // this.$refs.selectElement.addEventListener('scroll', this.updateOptionsPosition)
+        window.addEventListener('scroll', this.updateOptionsPosition)
     },
     methods: {
         toggleOptions() {
             this.hasOpened = true
+            this.updateOptionsPosition()
             this.isOptionsShow = !this.isOptionsShow
         },
         closeOptions() {
@@ -99,6 +103,28 @@ export default {
         validate() {
             if (!this.selectedOption.key && this.required) this.isValid = false
             else this.isValid = true
+        },
+        updateOptionsPosition() {
+            console.log('here')
+            const selectRect = this.$refs.selectElement.getBoundingClientRect()
+            const spaceAbove = selectRect.top
+            const spaceBelow = window.innerHeight - selectRect.bottom
+            const optionsDropdown = this.$refs.optionsDropdown
+            const optionsHeight = optionsDropdown.offsetHeight
+            // if (spaceBelow < 200) optionsDropdown.style.top = `-${optionsHeight}px`
+            // let height
+            // if (spaceBelow < 240) {
+            //     this.isOptionsAbove = true
+            //     height = spaceAbove - 40
+            //     optionsDropdown.style.maxHeight = `${height > 500 ? 500 : height}px`
+            // } else {
+            //     this.isOptionsAbove = false
+            //     height = spaceBelow - 40
+            //     optionsDropdown.style.maxHeight = `${height > 500 ? 500 : height}px`
+            // }
+            this.isOptionsAbove = spaceBelow < 240
+            const height = spaceBelow < 240 ? spaceAbove - 40 : spaceBelow - 40
+            optionsDropdown.style.maxHeight = `${height > 500 ? 500 : height}px`
         },
     },
     computed: {
@@ -143,6 +169,9 @@ export default {
                 document.removeEventListener('click', el.clickOutside)
             },
         }
+    },
+    beforeUnmount() {
+        window.removeEventListener('scroll', this.updateOptionsPosition)
     },
 }
 </script>
@@ -240,7 +269,12 @@ export default {
     pointer-events: none;
 }
 
+.select-wrapper .options-wrapper .selected svg {
+    transition: rotate 0.2s ease 0s;
+}
+
 .select-wrapper .options-wrapper .options {
+    box-sizing: border-box;
     position: absolute;
     width: 100%;
     border: 1px solid #ccc;
@@ -251,16 +285,32 @@ export default {
     border-radius: 0 0 4px 4px;
     transition: transform .2s ease-in-out;
     transform-origin: top;
+    padding-bottom: 3px;
 }
 
 .select-wrapper .options-wrapper .options.open {
-    transform: scaleY(1);
     border: 1px solid #005faa;
     border-top: none;
+    transform: scaleY(1);
 }
 
 .select-wrapper .options-wrapper .options.hide {
     transform: scaleY(0);
+}
+
+.select-wrapper .options-wrapper.above .selected.open {
+    border-radius: 0 0 4px 4px;
+    /* border-top: none; */
+}
+
+.select-wrapper .options-wrapper.above .options {
+    top: 0;
+    translate: 0 calc(-100% - 1px);
+    transform-origin: bottom;
+    border-radius: 4px 4px 0 0;
+    padding-top: 3px;
+    border: 1px solid #005faa;
+    border-bottom: none;
 }
 
 .select-wrapper .options-wrapper .options .option {

@@ -15,11 +15,11 @@
     <v-form @submitForm="sub">
       <div class="wrapper">
         <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" required
-          :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid />
+        :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid />
+        <v-select :idx="3" id="select" v-model="count" :options="[1, 2, 3,4,5,6,7,8,9,11,222,3,4,5,645,3456,42355,4235,234,3245,2345,2345,3245,2345,345]" required />
         <v-input :idx="1" id="field" label="field.label" v-model="model.password" required type="password"
           :rules="passwordRules"  showPasswordIcon />
         <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="field.label"  :rules="['minLength:6', 'maxLength:10']"/>
-        <v-select :idx="3" id="select" v-model="count" :options="[1, 2, 3]" required />
         <v-input :idx="4" id="input3" v-model="email" :minLength="3" required label="field.label"  :rules="['minLength:6', 'maxLength:10']"/>
         <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >Submit</button>
       </div>
