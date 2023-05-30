@@ -105,23 +105,10 @@ export default {
             else this.isValid = true
         },
         updateOptionsPosition() {
-            console.log('here')
             const selectRect = this.$refs.selectElement.getBoundingClientRect()
             const spaceAbove = selectRect.top
             const spaceBelow = window.innerHeight - selectRect.bottom
             const optionsDropdown = this.$refs.optionsDropdown
-            const optionsHeight = optionsDropdown.offsetHeight
-            // if (spaceBelow < 200) optionsDropdown.style.top = `-${optionsHeight}px`
-            // let height
-            // if (spaceBelow < 240) {
-            //     this.isOptionsAbove = true
-            //     height = spaceAbove - 40
-            //     optionsDropdown.style.maxHeight = `${height > 500 ? 500 : height}px`
-            // } else {
-            //     this.isOptionsAbove = false
-            //     height = spaceBelow - 40
-            //     optionsDropdown.style.maxHeight = `${height > 500 ? 500 : height}px`
-            // }
             this.isOptionsAbove = spaceBelow < 240
             const height = spaceBelow < 240 ? spaceAbove - 40 : spaceBelow - 40
             optionsDropdown.style.maxHeight = `${height > 500 ? 500 : height}px`
