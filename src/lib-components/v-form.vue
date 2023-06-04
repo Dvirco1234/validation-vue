@@ -18,6 +18,7 @@ export default {
             inputValidations: {},
             inputsOrder: [],
             isSubmitting: false,
+            hasSubmitted: false,
         }
     },
     methods: {
@@ -33,7 +34,6 @@ export default {
 
             for (const id of this.inputsOrder) {
                 const input = this.inputValidations[id]
-                console.log('input.hasSubmitRule: ', input.hasSubmitRule);
                 if (!input.isValid || input.hasSubmitRule) {
                     isValid = false
                     await input.validate()
@@ -46,6 +46,7 @@ export default {
         async onSubmit(ev) {
             ev.preventDefault()
             ev.stopPropagation()
+            this.hasSubmitted = true
             this.isSubmitting = true
             const isValid = await this.isFormValid()
             // this.$emit('submit', isValid)

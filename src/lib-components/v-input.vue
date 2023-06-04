@@ -1,12 +1,14 @@
 <template>
     <section>
-        <label :for="id" :style="{ color: txtColor }">{{ label }}<span v-if="required && label && !hideAsterisk" :style="{ color: errorColor }">*</span></label>
+        <label :for="id" :style="{ color: txtColor }">{{ label }}<span v-if="required && label && !hideAsterisk"
+                :style="{ color: errorColor }">*</span></label>
         <div class="input-wrapper" :class="{ mb: !checklist }" :style="{ '--placeholder-color': placeholderColor }">
             <textarea v-if="textareaRows" :rows="textareaRows" :ref="'ref' + id" :id="id" :name="id" :placeholder="placeholder"
                 @input="handleInput($event.target.value)" @blur="validate()" :value="modelValue"
-                :style="{ 'outline-color': showErrorMessage ? errorColor : '' }" ></textarea>
-            <input v-else :ref="'ref' + id" :id="id" :name="id" :type="isPasswordShown || type === 'cc' ? 'text' : type" :placeholder="placeholder"
-                :maxlength="inputMaxLength" @input="handleInput($event.target.value)" @blur="validate()" :value="modelValue" autocomplete="off"
+                :style="{ 'outline-color': showErrorMessage ? errorColor : '' }"></textarea>
+            <input v-else :ref="'ref' + id" :id="id" :name="id" :type="isPasswordShown || type === 'cc' ? 'text' : type"
+                :placeholder="placeholder" :maxlength="inputMaxLength" @input="handleInput($event.target.value)" @blur="validate()"
+                :value="modelValue" autocomplete="off"
                 :style="{ 'outline-color': showErrorMessage ? errorColor : showValidIcon && isValid ? validColor : '', 'padding-inline-start': showPasswordIcon && type === 'password' ? '42px' : '' }" />
             <div class="valid-icon-wrapper">
                 <span v-if="!showErrorMessage && isValid && showValidIcon" class="icon success-icon">
@@ -42,7 +44,8 @@
                     </svg>
                 </span>
             </div>
-            <div v-if="!isChecklist" class="error-message" :class="{ hide: !showErrorMessage }" :style="{ color: errorColor }">{{ errorMessage }}</div>
+            <div v-if="!isChecklist" class="error-message" :class="{ hide: !showErrorMessage }" :style="{ color: errorColor }">{{ errorMessage
+            }}</div>
         </div>
         <article v-if="checklist" class="checklist" :class="{ grid: isChecklistGrid }" :style="{ color: txtColor }">
             <div v-for="(check, idx) in checklist" :key="`${checklist.errorMessage}-${idx}`" class="list flex align-center">
@@ -85,10 +88,8 @@ export default {
         modelValue: String,
         rules: { type: Array, default: () => [] },
         asyncRule: { type: Function, default: null },
-        submitRule: {
-            type: Function,
-            default: null
-        },
+        submitRule: { type: Function, default: null },
+        validateOnSubmitOnly: { type: Boolean, default: false },
         textareaRows: { type: Number, default: 0 },
         // errorMessage: { type: String, default: 'This field is required' },
         errorColor: { type: String, default: '#c10015' },
@@ -165,8 +166,8 @@ export default {
             this.$emit('update:modelValue', value)
             let isValid = false
             // try {
-                if (this.isBlured || value.length === this.inputMaxLength) ({ isValid } = await this.validate())
-                else ({ isValid } = await this.checkValidation())
+            if (this.isBlured || value.length === this.inputMaxLength) ({ isValid } = await this.validate())
+            else ({ isValid } = await this.checkValidation())
             // } catch (error) {
             //     isValid = false
             // }
@@ -175,6 +176,7 @@ export default {
         async validate() {
             this.isBlured = true
             if (this.isChecklist) return this.validateChecklist()
+            // if (this.invalidTerm) this.rulesFormat.push(this.validationOptsMap.invalidTerm)
             const { isValid, errorMessage } = await this.checkValidation()
             this.errorMessage = errorMessage || `Please enter ${this.label.toLowerCase() || 'a valid value'}`
             this.showErrorMessage = !isValid
@@ -189,12 +191,19 @@ export default {
             }, { isValid: true, errorMessage: '' })
             if (this.asyncRule) validationResult = await this.asyncRule(this.inputValue).catch(err => {
                 console.error(err)
-                validationResult = {isValid: false}
+                validationResult = { isValid: false }
             })
-            if (this.submitRule && this.$parent.isSubmitting) validationResult = await this.submitRule(this.inputValue).catch(err => {
-                console.error(err)
-                validationResult = {isValid: false}
-            })
+            // if (this.submitRule && this.$parent.isSubmitting) validationResult = await this.submitRule(this.inputValue).catch(err => {
+            //     console.error(err)
+            //     validationResult = {isValid: false}
+            // })
+            if (this.submitRule) {
+                const shouldValidate = !this.validateOnSubmitOnly ? this.$parent.hasSubmitted : this.$parent.isSubmitting
+                if (shouldValidate) validationResult = await this.submitRule(this.inputValue).catch(err => {
+                    console.error(err)
+                    validationResult = { isValid: false }
+                })
+            }
             // return this.isChecklist ? { ...validationResult, errorMessage: '' } : validationResult
             return validationResult
         },
@@ -212,7 +221,7 @@ export default {
                 if (typeof opt === 'string') {
                     if (opt.includes('Length')) {
                         const [ruleName, lengthValue] = opt.split(':')
-                        ruleName === 'minLength'? this.inputMinLength = parseInt(lengthValue) : this.inputMaxLength = parseInt(lengthValue)
+                        ruleName === 'minLength' ? this.inputMinLength = parseInt(lengthValue) : this.inputMaxLength = parseInt(lengthValue)
                         return this.validationOptsMap[ruleName]
                     }
                     return this.validationOptsMap[opt]
@@ -250,8 +259,8 @@ export default {
             return formattedInput
         },
         isCcValid(val) {
-            if(!val) return false
-            if(val.length !== this.inputMaxLength) return false
+            if (!val) return false
+            if (val.length !== this.inputMaxLength) return false
             const input = val.replace(/\s/g, '')
             switch (this.cardType) {
                 case 'visa':
@@ -305,7 +314,8 @@ label {
     font-family: sans-serif;
 }
 
-.input-wrapper input, textarea {
+.input-wrapper input,
+textarea {
     flex: 1;
     padding: 8px 12px;
     border-radius: 4px;
@@ -316,7 +326,8 @@ label {
     resize: none;
 }
 
-.input-wrapper input::placeholder, textarea::placeholder {
+.input-wrapper input::placeholder,
+textarea::placeholder {
     color: var(--placeholder-color);
 }
 
@@ -410,7 +421,7 @@ span.icon {
 .flex {
     display: flex;
 }
+
 .align-center {
     align-items: center;
-}
-</style>
+}</style>

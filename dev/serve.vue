@@ -18,8 +18,8 @@
         :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid /> -->
         <v-select :idx="3" id="select" v-model="count" :options="[1, 2, 3,4,5,6,7,8,9,11,222,3,4,5,645,3456,42355,4235,234,3245,2345,2345,3245,2345,345]" required />
         <v-input :idx="1" id="field" label="field.label" v-model="model.password" required type="password"
-          :rules="passwordRules"  showPasswordIcon />
-        <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="123"  :rules="['minLength:6', 'maxLength:10']" :submitRule="sr"/>
+          :rules="passwordRules"  showPasswordIcon :invalidTerm="invalidTerm"/>
+        <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="123"  :rules="['minLength:6', 'maxLength:10']" :submitRule="sr" :validateOnSubmitOnly="false"/>
         <!-- <v-input :idx="4" id="input3" v-model="email" :minLength="3" required label="field.label"  :rules="['minLength:6', 'maxLength:10']"/> -->
         <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >Submit</button>
       </div>
@@ -62,6 +62,7 @@ export default defineComponent({
   name: 'ServeDev',
   data() {
     return {
+      invalidTerm: '',
       ccInfo: {
         CC_number: '',
         expiration_year: '',
@@ -141,12 +142,11 @@ export default defineComponent({
   methods: {
     sub(ev) {
       console.log('ev: ', ev);
-
+      this.invalidTerm = '123456'
     },
     sr(val) {
       console.log('val: ', val);
       return new Promise(resolve => {
-        bb
       setTimeout(() => {
         resolve({
             isValid: val.includes('123'),
