@@ -85,6 +85,10 @@ export default {
         modelValue: String,
         rules: { type: Array, default: () => [] },
         asyncRule: { type: Function, default: null },
+        submitRule: {
+            type: Function,
+            default: null
+        },
         textareaRows: { type: Number, default: 0 },
         // errorMessage: { type: String, default: 'This field is required' },
         errorColor: { type: String, default: '#c10015' },
@@ -147,7 +151,7 @@ export default {
     async mounted() {
         const { isValid } = await this.checkValidation()
         if (this.required && this.$parent.setInputValidations) {
-            this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate })
+            this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
             this.$parent.setOrder(this.id)
         }
     },
@@ -166,7 +170,7 @@ export default {
             // } catch (error) {
             //     isValid = false
             // }
-            if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate })
+            if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
         },
         async validate() {
             this.isBlured = true
@@ -183,7 +187,14 @@ export default {
                 const { isValid, errorMessage } = validationRule(this.inputValue)
                 return { isValid, errorMessage }
             }, { isValid: true, errorMessage: '' })
-            if (this.asyncRule) validationResult = await this.asyncRule(this.inputValue)
+            if (this.asyncRule) validationResult = await this.asyncRule(this.inputValue).catch(err => {
+                console.error(err)
+                validationResult = {isValid: false}
+            })
+            if (this.submitRule && this.$parent.isSubmitting) validationResult = await this.submitRule(this.inputValue).catch(err => {
+                console.error(err)
+                validationResult = {isValid: false}
+            })
             // return this.isChecklist ? { ...validationResult, errorMessage: '' } : validationResult
             return validationResult
         },
