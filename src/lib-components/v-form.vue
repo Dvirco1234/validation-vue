@@ -44,6 +44,7 @@ export default {
             return isValid
         },
         async onSubmit(ev) {
+            if (this.isSubmitting) return
             ev.preventDefault()
             ev.stopPropagation()
             this.$emit('submitStart', ev)
