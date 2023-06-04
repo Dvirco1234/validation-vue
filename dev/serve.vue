@@ -145,9 +145,10 @@ export default defineComponent({
       console.log('isValid: ', isValid);
       this.isLoading = false
     },
-    sr(val) {
+   async sr(val) {
+      console.log('heree');
       console.log('val: ', val);
-      return new Promise(resolve => {
+      const res = await new Promise(resolve => {
       setTimeout(() => {
         resolve({
             isValid: val.includes('123'),
@@ -155,7 +156,24 @@ export default defineComponent({
           })
       }, 2000)
     })
-    }
+      // await this.sr2(val)
+      console.log('res: ', res);
+      return res
+    return {
+                isValid: true,
+                errorMessage: 'That email address is already in use',
+            }
+    },
+  //  async sr2(val) {
+  //           return new Promise(resolve => {
+  //     setTimeout(() => {
+  //       resolve({
+  //           isValid: val.includes('123'),
+  //           errorMessage: 'Username must include 123',
+  //         })
+  //     }, 2000)
+  //   })
+  //   }
   },
   components: {
     //  ValidationVueSample,

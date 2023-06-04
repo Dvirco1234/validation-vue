@@ -35,8 +35,8 @@ export default {
             for (const id of this.inputsOrder) {
                 const input = this.inputValidations[id]
                 if (!input.isValid || input.hasSubmitRule) {
-                    isValid = false
-                    await input.validate()
+                    const res = await input.validate()
+                    isValid = res?.isValid
                     if (!firstInvalid) firstInvalid = input
                 }
             }
