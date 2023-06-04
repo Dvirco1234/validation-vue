@@ -117,7 +117,7 @@ export default {
             validationOptsMap: {
                 required: (val) => ({
                     isValid: val && val.length ? true : false,
-                    errorMessage: 'Required Field',
+                    errorMessage: this.label? '' : 'Required Field',
                 }),
                 length: (val) => ({
                     isValid: val.length >= this.inputMinLength && val.length <= this.inputMaxLength,
