@@ -46,6 +46,7 @@ export default {
         async onSubmit(ev) {
             ev.preventDefault()
             ev.stopPropagation()
+            this.$emit('submitStart', ev)
             this.hasSubmitted = true
             this.isSubmitting = true
             const isValid = await this.isFormValid()

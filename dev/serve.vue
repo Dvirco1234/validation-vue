@@ -12,7 +12,7 @@
         <button>save</button>
       </div>
     </v-form> -->
-    <v-form @submitForm="sub">
+    <v-form @submitForm="sub" @submitStart="isLoading = true">
       <div class="wrapper">
         <!-- <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" required
         :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid /> -->
@@ -21,7 +21,7 @@
           :rules="passwordRules"  showPasswordIcon :invalidTerm="invalidTerm"/>
         <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="123"  :rules="['minLength:6', 'maxLength:10']" :submitRule="sr" :validateOnSubmitOnly="false"/>
         <!-- <v-input :idx="4" id="input3" v-model="email" :minLength="3" required label="field.label"  :rules="['minLength:6', 'maxLength:10']"/> -->
-        <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >Submit</button>
+        <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >{{isLoading? 'loading':'Submit'}}</button>
       </div>
 
 
@@ -63,6 +63,7 @@ export default defineComponent({
   data() {
     return {
       invalidTerm: '',
+      isLoading: false,
       ccInfo: {
         CC_number: '',
         expiration_year: '',
@@ -140,9 +141,9 @@ export default defineComponent({
     }
   },
   methods: {
-    sub(ev) {
-      console.log('ev: ', ev);
-      this.invalidTerm = '123456'
+    sub({isValid}) {
+      console.log('isValid: ', isValid);
+      this.isLoading = false
     },
     sr(val) {
       console.log('val: ', val);

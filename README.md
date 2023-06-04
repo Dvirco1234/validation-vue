@@ -146,7 +146,8 @@ $ npm start
 
 The `<VForm>` component emits the following event:
 
-- **submitForm**: Emitted when the form is submitted. The event handler receives a boolean value indicating the form's validity (true for valid, false for invalid).
+- **@submitForm**: Emitted when the form is submitted. The event handler receives a boolean value indicating the form's validity (true for valid, false for invalid).
+- **@submitStart**: Emitted when start form submition. This event can be used to trigger actions such as showing a loading indicator or disabling the form during submission.
 
 ## Properties
 
