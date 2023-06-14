@@ -20,7 +20,7 @@
         <v-input :idx="1" id="field" label="field.label" v-model="model.password" required type="password"
           :rules="passwordRules"  showPasswordIcon :invalidTerm="invalidTerm"/>
         <!-- <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="123"  :rules="['minLength:6', 'maxLength:10']" :submitRule="sr" :validateOnSubmitOnly="false"/> -->
-        <v-input id="input4" v-model="model.firstName" required label="123"  :rules="['minLength:6', 'maxLength:10']" :focus="isFocus" autofocus/>
+        <v-input id="input4" v-model="model.firstName" required label="123"  :rules="['minLength:6', 'maxLength:10']" :focus="isFocus" autofocus :readonly="!isFocus"/>
         <v-input id="input5" v-model="model.lastName" required label="textarea"  :rules="['minLength:6', 'maxLength:10']" textareaRows="4" :readonly="readonly" />
         <!-- <v-input :idx="4" id="input3" v-model="email" :minLength="3" required label="field.label"  :rules="['minLength:6', 'maxLength:10']"/> -->
         <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >{{isLoading? 'loading':'Submit'}}</button>

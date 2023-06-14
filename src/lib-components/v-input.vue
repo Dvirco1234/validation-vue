@@ -302,7 +302,14 @@ export default {
             return sum % 10 === 0
         },
         applyFocus() {
-            this.$refs['ref' + this.id].focus()
+            if (!this.$refs['ref' + this.id]) return
+            // if (this.readonly) {
+            //     setTimeout(() => {
+            //         console.log('this.$refs[ref + this.id]:', this.$refs['ref' + this.id])
+            //         if (!this.readonly) this.$refs['ref' + this.id].focus()
+            //     },2000)
+            // } else
+                this.$refs['ref' + this.id].focus()
         },
     },
     computed: {
@@ -320,6 +327,7 @@ export default {
                 this.$parent.setInputValidations({ isValid: this.isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
                 this.$parent.setOrder(this.id)
             }
+            if (this.focus) setTimeout(() => this.applyFocus())
         },
         focus(isFocus) {
             if (isFocus) this.applyFocus()
