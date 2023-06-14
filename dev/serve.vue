@@ -12,14 +12,15 @@
         <button>save</button>
       </div>
     </v-form> -->
-    <v-form @submitForm="sub" @submitStart="isLoading = true">
+    <v-form @submitForm="sub" @submitStart="start">
       <div class="wrapper">
         <!-- <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" required
         :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid /> -->
-        <v-select :idx="3" id="select" v-model="count" :options="[1, 2, 3,4,5,6,7,8,9,11,222,3,4,5,645,3456,42355,4235,234,3245,2345,2345,3245,2345,345]" required />
+        <v-select :idx="3" id="select" v-model="count" isSearch :options="[1, 2, 3,4,5,6,7,8,9,11,222,3,4,5,645,3456,42355,4235,234,3245,2345,2345,3245,2345,345]" required />
         <v-input :idx="1" id="field" label="field.label" v-model="model.password" required type="password"
           :rules="passwordRules"  showPasswordIcon :invalidTerm="invalidTerm"/>
-        <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="123"  :rules="['minLength:6', 'maxLength:10']" :submitRule="sr" :validateOnSubmitOnly="false"/>
+        <!-- <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="123"  :rules="['minLength:6', 'maxLength:10']" :submitRule="sr" :validateOnSubmitOnly="false"/> -->
+        <v-input id="input4" v-model="name" required label="123"  :rules="['minLength:6', 'maxLength:10']" />
         <!-- <v-input :idx="4" id="input3" v-model="email" :minLength="3" required label="field.label"  :rules="['minLength:6', 'maxLength:10']"/> -->
         <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >{{isLoading? 'loading':'Submit'}}</button>
       </div>
@@ -71,7 +72,7 @@ export default defineComponent({
         CVV: '',
         name_on_card: '',
       },
-      name: '',
+      name: 'kuyg',
       email: '',
       tryRule: (value) => ({
         isValid: value.includes('123'),
@@ -145,6 +146,11 @@ export default defineComponent({
       console.log('isValid: ', isValid);
       this.isLoading = false
     },
+    start(val) {
+      console.log('val: ', val);
+      console.log('startttttttttttt');
+      this.isLoading = true
+    },
    async sr(val) {
       console.log('heree');
       console.log('val: ', val);
@@ -158,7 +164,7 @@ export default defineComponent({
     })
       // await this.sr2(val)
       console.log('res: ', res);
-      return res
+      // return res
     return {
                 isValid: true,
                 errorMessage: 'That email address is already in use',

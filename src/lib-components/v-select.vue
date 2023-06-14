@@ -235,6 +235,8 @@ export default {
 .select-wrapper .options-wrapper .selected input.value {
     padding: 0;
     width: 100%;
+    border: none;
+    outline: none;
 }
 
 .select-wrapper .options-wrapper .selected.position-relative {

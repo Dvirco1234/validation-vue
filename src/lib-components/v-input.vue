@@ -117,7 +117,7 @@ export default {
             validationOptsMap: {
                 required: (val) => ({
                     isValid: val && val.length ? true : false,
-                    errorMessage: this.label? '' : 'Required Field',
+                    errorMessage: this.label ? '' : 'Required Field',
                 }),
                 length: (val) => ({
                     isValid: val.length >= this.inputMinLength && val.length <= this.inputMaxLength,
@@ -190,8 +190,9 @@ export default {
                 return { isValid, errorMessage }
             }, { isValid: true, errorMessage: '' })
             if (this.asyncRule) validationResult = await this.asyncRule(this.inputValue).catch(err => {
-                console.error(err)
                 validationResult = { isValid: false }
+                console.error(err)
+                // throw err
             })
             // if (this.submitRule && this.$parent.isSubmitting) validationResult = await this.submitRule(this.inputValue).catch(err => {
             //     console.error(err)
@@ -200,8 +201,9 @@ export default {
             if (this.submitRule) {
                 const shouldValidate = !this.validateOnSubmitOnly ? this.$parent.hasSubmitted : this.$parent.isSubmitting
                 if (shouldValidate) validationResult = await this.submitRule(this.inputValue).catch(err => {
-                    console.error(err)
                     validationResult = { isValid: false }
+                    console.error(err)
+                    // throw err
                 })
             }
             // return this.isChecklist ? { ...validationResult, errorMessage: '' } : validationResult
@@ -294,6 +296,11 @@ export default {
         hasMultipleRequirements() {
             return this.rulesFormat.length > 1
         },
+    },
+    watch: {
+        modelValue(newValue) {
+            this.inputValue = newValue
+        }
     },
 }
 </script>
@@ -424,4 +431,5 @@ span.icon {
 
 .align-center {
     align-items: center;
-}</style>
+}
+</style>
