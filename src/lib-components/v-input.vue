@@ -3,9 +3,14 @@
         <label :for="id" :style="{ color: txtColor }">{{ label }}<span v-if="required && label && !hideAsterisk"
                 :style="{ color: errorColor }">*</span></label>
         <div class="input-wrapper" :class="{ mb: !checklist }" :style="{ '--placeholder-color': placeholderColor }">
-            <textarea v-if="textareaRows" :rows="textareaRows" :ref="'ref' + id" :id="id" :name="id" :placeholder="placeholder"
+            <textarea v-if="textareaRows && readonly" :rows="textareaRows" :value="modelValue" readonly class="readonly"
+                :placeholder="placeholder"></textarea>
+            <textarea v-else-if="textareaRows" :rows="textareaRows" :ref="'ref' + id" :id="id" :name="id" :placeholder="placeholder"
                 @input="handleInput($event.target.value)" @blur="validate()" :value="modelValue"
                 :style="{ 'outline-color': showErrorMessage ? errorColor : '' }"></textarea>
+
+            <input v-else-if="readonly" type="text" :value="modelValue" readonly class="readonly" :placeholder="placeholder" :class="{'no-focus': preventFocus}">
+
             <input v-else :ref="'ref' + id" :id="id" :name="id" :type="isPasswordShown || type === 'cc' ? 'text' : type"
                 :placeholder="placeholder" :maxlength="inputMaxLength" @input="handleInput($event.target.value)" @blur="validate()"
                 :value="modelValue" autocomplete="off"
@@ -75,6 +80,8 @@ export default {
         placeholder: { type: String, default: '' },
         label: { type: String, default: '' },
         // invalidTerm: { type: String, default: '' },
+        readonly: { type: Boolean, default: false },
+        preventFocus: { type: Boolean, default: false },
         showValidIcon: { type: Boolean, default: false },
         showPasswordIcon: { type: Boolean, default: false },
         required: { type: Boolean, default: false },
@@ -151,7 +158,7 @@ export default {
     },
     async mounted() {
         const { isValid } = await this.checkValidation()
-        if (this.required && this.$parent.setInputValidations) {
+        if (this.required && this.$parent.setInputValidations && !this.readonly) {
             this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
             this.$parent.setOrder(this.id)
         }
@@ -171,7 +178,7 @@ export default {
             // } catch (error) {
             //     isValid = false
             // }
-            if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
+            if (this.required && this.$parent.setInputValidations && !this.readonly) this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
         },
         async validate() {
             this.isBlured = true
@@ -300,6 +307,14 @@ export default {
     watch: {
         modelValue(newValue) {
             this.inputValue = newValue
+        },
+        readonly(isReadonly) {
+            if (isReadonly) return
+            if (this.required && this.$parent.setInputValidations && !this.readonly) {
+                this.$parent.setInputValidations({ isValid: this.isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
+                this.$parent.setOrder(this.id)
+            }
+
         }
     },
 }
@@ -333,12 +348,16 @@ textarea {
     resize: none;
 }
 
+/* .input-wrapper input.no-focus:focus {
+    outline: 1px solid #ccc;
+} */
+
 .input-wrapper input::placeholder,
 textarea::placeholder {
     color: var(--placeholder-color);
 }
 
-.input-wrapper input:focus {
+.input-wrapper input:focus:not(.no-focus) {
     outline-color: #005FAA;
 }
 

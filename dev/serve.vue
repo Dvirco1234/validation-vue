@@ -20,7 +20,8 @@
         <v-input :idx="1" id="field" label="field.label" v-model="model.password" required type="password"
           :rules="passwordRules"  showPasswordIcon :invalidTerm="invalidTerm"/>
         <!-- <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="123"  :rules="['minLength:6', 'maxLength:10']" :submitRule="sr" :validateOnSubmitOnly="false"/> -->
-        <v-input id="input4" v-model="name" required label="123"  :rules="['minLength:6', 'maxLength:10']" />
+        <v-input id="input4" v-model="model.firstName" required label="123"  :rules="['minLength:6', 'maxLength:10']" readonly preventFocus/>
+        <v-input id="input5" v-model="model.lastName" required label="textarea"  :rules="['minLength:6', 'maxLength:10']" textareaRows="4" :readonly="readonly" />
         <!-- <v-input :idx="4" id="input3" v-model="email" :minLength="3" required label="field.label"  :rules="['minLength:6', 'maxLength:10']"/> -->
         <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >{{isLoading? 'loading':'Submit'}}</button>
       </div>
@@ -63,6 +64,7 @@ export default defineComponent({
   name: 'ServeDev',
   data() {
     return {
+      readonly: true,
       invalidTerm: '',
       isLoading: false,
       ccInfo: {
@@ -88,57 +90,57 @@ export default defineComponent({
         confirmPassword: '',
         phone: '',
       },
-      fields: [
-        { label: 'First name', keyName: 'firstName', type: 'text', isRequired: true, isFullLine: false, },
-        { label: 'Last name', keyName: 'lastName', type: 'text', isRequired: true, isFullLine: false, },
-        { label: 'Country', keyName: 'contry', type: 'text', isRequired: true, isFullLine: false, },
-        { label: 'Email', keyName: 'email', type: 'text', isRequired: true, isFullLine: false, rules: ['email'] },
-        {
-          label: 'Password', keyName: 'password', type: 'password', isRequired: true, isFullLine: true, rules: [
-            (val) => ({
-              isValid: /[a-z]/.test(val),
-              errorMessage: '1 lowercase character',
-            }),
-            (val) => ({
-              isValid: /\d/.test(val),
-              errorMessage: '1 number',
-            }),
-            (val) => ({
-              isValid: /[A-Z]/.test(val),
-              errorMessage: '1 uppercase character',
-            }),
-            (val) => ({
-              isValid: val.length >= 8,
-              errorMessage: '8 characters minimum',
-            }),
-          ], isChecklist: true
-        },
-        {
-          label: 'Confirm Password', keyName: 'confirmPassword', type: 'password', isRequired: false, isFullLine: true, rules: [(value) => ({
-            isValid: value.length >= 8 && value === this.model.password,
-            errorMessage: 'Password confirmation does not match',
-          })]
-        },
-        { label: 'Phone number', keyName: 'phone', type: 'phone', isRequired: true, isFullLine: true, },
-      ],
-      passwordRules: [
-        (val) => ({
-          isValid: /[a-z]/.test(val),
-          errorMessage: '1 lowercase character',
-        }),
-        (val) => ({
-          isValid: /\d/.test(val),
-          errorMessage: '1 number',
-        }),
-        (val) => ({
-          isValid: /[A-Z]/.test(val),
-          errorMessage: '1 uppercase character',
-        }),
-        (val) => ({
-          isValid: val.length >= 8,
-          errorMessage: '8 characters minimum',
-        }),
-      ],
+      // fields: [
+      //   { label: 'First name', keyName: 'firstName', type: 'text', isRequired: true, isFullLine: false, },
+      //   { label: 'Last name', keyName: 'lastName', type: 'text', isRequired: true, isFullLine: false, },
+      //   { label: 'Country', keyName: 'contry', type: 'text', isRequired: true, isFullLine: false, },
+      //   { label: 'Email', keyName: 'email', type: 'text', isRequired: true, isFullLine: false, rules: ['email'] },
+      //   {
+      //     label: 'Password', keyName: 'password', type: 'password', isRequired: true, isFullLine: true, rules: [
+      //       (val) => ({
+      //         isValid: /[a-z]/.test(val),
+      //         errorMessage: '1 lowercase character',
+      //       }),
+      //       (val) => ({
+      //         isValid: /\d/.test(val),
+      //         errorMessage: '1 number',
+      //       }),
+      //       (val) => ({
+      //         isValid: /[A-Z]/.test(val),
+      //         errorMessage: '1 uppercase character',
+      //       }),
+      //       (val) => ({
+      //         isValid: val.length >= 8,
+      //         errorMessage: '8 characters minimum',
+      //       }),
+      //     ], isChecklist: true
+      //   },
+      //   {
+      //     label: 'Confirm Password', keyName: 'confirmPassword', type: 'password', isRequired: false, isFullLine: true, rules: [(value) => ({
+      //       isValid: value.length >= 8 && value === this.model.password,
+      //       errorMessage: 'Password confirmation does not match',
+      //     })]
+      //   },
+      //   { label: 'Phone number', keyName: 'phone', type: 'phone', isRequired: true, isFullLine: true, },
+      // ],
+      // passwordRules: [
+      //   (val) => ({
+      //     isValid: /[a-z]/.test(val),
+      //     errorMessage: '1 lowercase character',
+      //   }),
+      //   (val) => ({
+      //     isValid: /\d/.test(val),
+      //     errorMessage: '1 number',
+      //   }),
+      //   (val) => ({
+      //     isValid: /[A-Z]/.test(val),
+      //     errorMessage: '1 uppercase character',
+      //   }),
+      //   (val) => ({
+      //     isValid: val.length >= 8,
+      //     errorMessage: '8 characters minimum',
+      //   }),
+      // ],
     }
   },
   methods: {
