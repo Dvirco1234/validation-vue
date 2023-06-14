@@ -53,7 +53,9 @@ export default {
             const isValid = await this.isFormValid()
             // this.$emit('submit', isValid)
             // this.$emit('submitForm', isValid)
-            this.$emit('submitForm', { event: ev, isValid })
+            // this.$emit('submitForm', { event: ev, isValid })
+            if(isValid) this.$emit('submitForm', ev)
+            else this.$emit('submitFailed')
             this.isSubmitting = false
         }
     },

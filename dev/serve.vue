@@ -12,7 +12,7 @@
         <button>save</button>
       </div>
     </v-form> -->
-    <v-form @submitForm="sub" @submitStart="start">
+    <v-form @submitForm="sub" @submitStart="start" @submitFailed="failed">
       <div class="wrapper">
         <!-- <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" required
         :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid /> -->
@@ -152,6 +152,9 @@ export default defineComponent({
       console.log('val: ', val);
       console.log('startttttttttttt');
       this.isLoading = true
+    },
+    failed() {
+      console.log('failed');
     },
    async sr(val) {
       console.log('heree');
