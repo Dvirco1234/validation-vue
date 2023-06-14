@@ -82,6 +82,8 @@ export default {
         // invalidTerm: { type: String, default: '' },
         readonly: { type: Boolean, default: false },
         preventFocus: { type: Boolean, default: false },
+        focus: { type: Boolean, default: false },
+        autofocus: { type: Boolean, default: false },
         showValidIcon: { type: Boolean, default: false },
         showPasswordIcon: { type: Boolean, default: false },
         required: { type: Boolean, default: false },
@@ -157,6 +159,7 @@ export default {
         if (this.isChecklist) this.validateChecklist()
     },
     async mounted() {
+        if (this.autofocus) this.applyFocus()
         const { isValid } = await this.checkValidation()
         if (this.required && this.$parent.setInputValidations && !this.readonly) {
             this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
@@ -298,6 +301,9 @@ export default {
             }
             return sum % 10 === 0
         },
+        applyFocus() {
+            this.$refs['ref' + this.id].focus()
+        },
     },
     computed: {
         hasMultipleRequirements() {
@@ -314,8 +320,10 @@ export default {
                 this.$parent.setInputValidations({ isValid: this.isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
                 this.$parent.setOrder(this.id)
             }
-
-        }
+        },
+        focus(isFocus) {
+            if (isFocus) this.applyFocus()
+        },
     },
 }
 </script>
