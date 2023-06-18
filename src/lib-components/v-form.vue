@@ -22,8 +22,13 @@ export default {
         }
     },
     methods: {
-        setInputValidations({ isValid, id, ref, validate, hasSubmitRule }) {
-            this.inputValidations[id] = { isValid, ref, validate, hasSubmitRule }
+        // setInputValidations({ isValid, id, ref, validate, hasSubmitRule }) {
+        //     this.inputValidations[id] = { isValid, ref, validate, hasSubmitRule }
+        // },
+        setInputValidations(obj) {
+            console.log('obj: ', obj);
+            this.inputValidations[obj.id] = { ...this.inputValidations[obj.id], ...obj}
+            console.log('this.inputValidations: ', this.inputValidations[obj.id]);
         },
         setOrder(id) {
             this.inputsOrder.push(id)

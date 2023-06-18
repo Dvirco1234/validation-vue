@@ -14,15 +14,13 @@
     </v-form> -->
     <v-form @submitForm="sub" @submitStart="start" @submitFailed="failed">
       <div class="wrapper">
-        <!-- <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" required
-        :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid /> -->
-        <v-select :idx="3" id="select" v-model="count" isSearch :options="[1, 2, 3,4,5,6,7,8,9,11,222,3,4,5,645,3456,42355,4235,234,3245,2345,2345,3245,2345,345]" required />
+        <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" :required="!isFocus"
+        :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid />
+        <!-- <v-select :idx="3" id="select" v-model="count" isSearch :options="[1, 2, 3,4,5,6,7,8,9,11,222,3,4,5,645,3456,42355,4235,234,3245,2345,2345,3245,2345,345]" required />
         <v-input :idx="1" id="field" label="field.label" v-model="model.password" required type="password"
           :rules="passwordRules"  showPasswordIcon :invalidTerm="invalidTerm"/>
-        <!-- <v-input :idx="2" id="input2" v-model="email" :minLength="3" required label="123"  :rules="['minLength:6', 'maxLength:10']" :submitRule="sr" :validateOnSubmitOnly="false"/> -->
         <v-input id="input4" v-model="model.firstName" required label="123"  :rules="['minLength:6', 'maxLength:10']" :focus="isFocus" autofocus :readonly="!isFocus"/>
-        <v-input id="input5" v-model="model.lastName" required label="textarea"  :rules="['minLength:6', 'maxLength:10']" textareaRows="4" :readonly="readonly" />
-        <!-- <v-input :idx="4" id="input3" v-model="email" :minLength="3" required label="field.label"  :rules="['minLength:6', 'maxLength:10']"/> -->
+        <v-input id="input5" v-model="model.lastName" required label="textarea"  :rules="['minLength:6', 'maxLength:10']" textareaRows="4" :readonly="readonly" /> -->
         <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >{{isLoading? 'loading':'Submit'}}</button>
         <button type="button" @click="isFocus = !isFocus">focus</button>
       </div>
@@ -92,39 +90,39 @@ export default defineComponent({
         confirmPassword: '',
         phone: '',
       },
-      // fields: [
-      //   { label: 'First name', keyName: 'firstName', type: 'text', isRequired: true, isFullLine: false, },
-      //   { label: 'Last name', keyName: 'lastName', type: 'text', isRequired: true, isFullLine: false, },
-      //   { label: 'Country', keyName: 'contry', type: 'text', isRequired: true, isFullLine: false, },
-      //   { label: 'Email', keyName: 'email', type: 'text', isRequired: true, isFullLine: false, rules: ['email'] },
-      //   {
-      //     label: 'Password', keyName: 'password', type: 'password', isRequired: true, isFullLine: true, rules: [
-      //       (val) => ({
-      //         isValid: /[a-z]/.test(val),
-      //         errorMessage: '1 lowercase character',
-      //       }),
-      //       (val) => ({
-      //         isValid: /\d/.test(val),
-      //         errorMessage: '1 number',
-      //       }),
-      //       (val) => ({
-      //         isValid: /[A-Z]/.test(val),
-      //         errorMessage: '1 uppercase character',
-      //       }),
-      //       (val) => ({
-      //         isValid: val.length >= 8,
-      //         errorMessage: '8 characters minimum',
-      //       }),
-      //     ], isChecklist: true
-      //   },
-      //   {
-      //     label: 'Confirm Password', keyName: 'confirmPassword', type: 'password', isRequired: false, isFullLine: true, rules: [(value) => ({
-      //       isValid: value.length >= 8 && value === this.model.password,
-      //       errorMessage: 'Password confirmation does not match',
-      //     })]
-      //   },
-      //   { label: 'Phone number', keyName: 'phone', type: 'phone', isRequired: true, isFullLine: true, },
-      // ],
+      fields: [
+        // { label: 'First name', keyName: 'firstName', type: 'text', isRequired: true, isFullLine: false, },
+        // { label: 'Last name', keyName: 'lastName', type: 'text', isRequired: true, isFullLine: false, },
+        // { label: 'Country', keyName: 'contry', type: 'text', isRequired: true, isFullLine: false, },
+        // { label: 'Email', keyName: 'email', type: 'text', isRequired: true, isFullLine: false, rules: ['email'] },
+        {
+          label: 'Password', keyName: 'password', type: 'password', isRequired: true, isFullLine: true, rules: [
+            (val) => ({
+              isValid: /[a-z]/.test(val),
+              errorMessage: '1 lowercase character',
+            }),
+            (val) => ({
+              isValid: /\d/.test(val),
+              errorMessage: '1 number',
+            }),
+            (val) => ({
+              isValid: /[A-Z]/.test(val),
+              errorMessage: '1 uppercase character',
+            }),
+            (val) => ({
+              isValid: val.length >= 8,
+              errorMessage: '8 characters minimum',
+            }),
+          ], isChecklist: true
+        },
+        // {
+        //   label: 'Confirm Password', keyName: 'confirmPassword', type: 'password', isRequired: false, isFullLine: true, rules: [(value) => ({
+        //     isValid: value.length >= 8 && value === this.model.password,
+        //     errorMessage: 'Password confirmation does not match',
+        //   })]
+        // },
+        { label: 'Phone number', keyName: 'phone', type: 'phone', isRequired: true, isFullLine: true, },
+      ],
       // passwordRules: [
       //   (val) => ({
       //     isValid: /[a-z]/.test(val),
@@ -151,12 +149,12 @@ export default defineComponent({
       this.isLoading = false
     },
     start(val) {
-      console.log('val: ', val);
-      console.log('startttttttttttt');
-      this.isLoading = true
+      // console.log('val: ', val);
+      // console.log('startttttttttttt');
+      // this.isLoading = true
     },
     failed() {
-      console.log('failed');
+      // console.log('failed');
     },
    async sr(val) {
       console.log('heree');

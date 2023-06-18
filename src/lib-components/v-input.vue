@@ -181,7 +181,8 @@ export default {
             // } catch (error) {
             //     isValid = false
             // }
-            if (this.required && this.$parent.setInputValidations && !this.readonly) this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
+            // if (this.required && this.$parent.setInputValidations && !this.readonly) this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
+            if (this.required && this.$parent.setInputValidations && !this.readonly) this.$parent.setInputValidations({ isValid, id: this.id })
         },
         async validate() {
             this.isBlured = true
@@ -222,7 +223,7 @@ export default {
         validateChecklist() {
             this.isBlured = true
             this.checklist = this.rulesFormat.map(validationRule => validationRule(this.inputValue))
-            return { isValid: this.checklist.some(li => !li.isValid) }
+            return { isValid: !this.checklist.some(li => !li.isValid) }
         },
         togglePasswordShown() {
             this.isPasswordShown = !this.isPasswordShown
@@ -303,13 +304,7 @@ export default {
         },
         applyFocus() {
             if (!this.$refs['ref' + this.id]) return
-            // if (this.readonly) {
-            //     setTimeout(() => {
-            //         console.log('this.$refs[ref + this.id]:', this.$refs['ref' + this.id])
-            //         if (!this.readonly) this.$refs['ref' + this.id].focus()
-            //     },2000)
-            // } else
-                this.$refs['ref' + this.id].focus()
+            this.$refs['ref' + this.id].focus()
         },
     },
     computed: {
@@ -324,13 +319,23 @@ export default {
         readonly(isReadonly) {
             if (isReadonly) return
             if (this.required && this.$parent.setInputValidations && !this.readonly) {
-                this.$parent.setInputValidations({ isValid: this.isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
+                // this.$parent.setInputValidations({ isValid: this.isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
+                this.$parent.setInputValidations({ isValid: this.isValid, id: this.id })
                 this.$parent.setOrder(this.id)
             }
             if (this.focus) setTimeout(() => this.applyFocus())
         },
         focus(isFocus) {
             if (isFocus) this.applyFocus()
+        },
+        async required(required) {
+            if (!required) {
+                this.$parent.setInputValidations({ isValid: true, id: this.id })
+                this.showErrorMessage = false
+            } else {
+                const { isValid } = await this.checkValidation()
+                this.$parent.setInputValidations({ isValid, id: this.id })
+            }
         },
     },
 }
