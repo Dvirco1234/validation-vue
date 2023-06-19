@@ -4,8 +4,9 @@
                 style=" color: #c10015;">*</span></label>
         <div class="options-wrapper" v-click-outside="closeOptions" :class="{ above: isOptionsAbove }">
             <!-- <div class="selected" @click="toggleOptions" v-click-outside="closeOptions" :class="{ open: isOptionsShow }" -->
-            <div class="selected" @click="toggleOptions" :class="{ open: isOptionsShow }" ref="selectElement"
-                :style="{ 'background-color': bgColor, borderColor: isValid ? '' : errorColor }">
+            <div class="selected" @click="toggleOptions" :class="{ open: isOptionsShow }" ref="selectElement" tabindex="0"
+                :style="{ 'background-color': bgColor, borderColor: isValid ? '' : errorColor }" @keydown.enter.prevent="enterOptions"
+                @keydown.prevent="handleArrows">
                 <div class="flex flex-column flex-1">
                     <label v-if="isInsideLabel && selectLabel" class="select-label">{{ selectLabel }}</label>
                     <input v-if="isOptionsShow && isSearch" ref="searchInput" class="value" type="text" @click.stop
@@ -20,9 +21,10 @@
                 <div class="error-message" :class="{ hide: isValid }" :style="{ color: errorColor }">Please choose {{ selectLabel ?
                     selectLabel.toLowerCase() : '' }}</div>
             </div>
-            <div class="options" :class="{ hide: !isOptionsShow, open: isOptionsShow }" ref="optionsDropdown">
-                <div v-for="(option, index) in optionsFormat" :key="option.key + index" class="option"
-                    :class="{ 'seperator-option': option.key === '$seperator' }" @click="selectOption(option)">
+            <div class="options" :class="{ hide: !isOptionsShow, open: isOptionsShow }" ref="optionsDropdown" @keydown.prevent="handleArrows">
+                <div v-for="(option, idx) in optionsFormat" :key="option.key + idx" class="option" :tabindex="idx === activeIndex && isOptionsShow || isOptionsShow && !idx && activeIndex === -1? 0 : -1" @keydown.enter.prevent="handleEnterOption"
+                    :class="{ 'seperator-option': option.key === '$seperator', 'curr-option': /*idx === activeIndex ||*/ selectedOption.key === option.key }"
+                    @click="selectOption(option, idx)">
                     <span v-if="option.key === '$seperator'"></span>
                     <span v-else>{{ option.label }}</span>
                 </div>
@@ -71,6 +73,7 @@ export default {
             isValid: true,
             hasOpened: false,
             isOptionsAbove: false,
+            activeIndex: -1,
         }
     },
     mounted() {
@@ -81,22 +84,29 @@ export default {
         }
         // this.$refs.selectElement.addEventListener('scroll', this.updateOptionsPosition)
         window.addEventListener('scroll', this.updateOptionsPosition)
+        this.$refs.selectElement.focus()
     },
     methods: {
         toggleOptions() {
             this.hasOpened = true
             this.updateOptionsPosition()
             this.isOptionsShow = !this.isOptionsShow
+            if (this.isOptionsShow) {
+                this.activeIndex = this.optionsFormat.findIndex(o => o.key === this.selectedOption.key)
+            }
         },
         closeOptions() {
             if (!this.isOptionsShow) return // Because this function called when clickOutside. If i remove this condition validation will be this.isValid === true
             this.isOptionsShow = false
+            this.activeIndex = -1
+            if(this.$refs.selectElement) this.$refs.selectElement.focus()
             this.searchTerm = ''
             if (this.hasOpened) this.validate()
             if (this.required && this.$parent.setInputValidations) this.$parent.setInputValidations({ isValid: this.isValid, id: this.id, validate: this.validate })
         },
-        selectOption(option) {
+        selectOption(option, idx) {
             this.selectedOption = option
+            this.activeIndex = idx
             this.closeOptions()
             this.$emit('update:modelValue', option.key)
         },
@@ -113,6 +123,35 @@ export default {
             const height = spaceBelow < 240 ? spaceAbove - 40 : spaceBelow - 40
             optionsDropdown.style.maxHeight = `${height > 500 ? 500 : height}px`
         },
+        enterOptions(ev) {
+            if (ev.target === this.$refs.selectElement) this.toggleOptions()
+        },
+        handleEnterOption(ev) {
+            const option = this.optionsFormat[this.activeIndex]
+            // const { label } = typeof option.label === 'number'? parseInt() : option.label
+            if (ev.target.innerText === option.label + '') this.selectOption(option, this.activeIndex)
+        },
+        handleArrows(ev) {
+            if (ev.key === 'ArrowUp') {
+                if (!this.activeIndex) return
+                this.activeIndex--
+                this.scrollList()
+            } else if (ev.key === 'ArrowDown') {
+                if (this.activeIndex === this.optionsFormat.length - 1) return
+                this.activeIndex++
+                this.scrollList()
+            }
+        },
+        scrollList() {
+            const elList = this.$refs.optionsDropdown
+            const { height } = elList.getBoundingClientRect()
+            const activeElement = elList.children[this.activeIndex]
+            if (activeElement) {
+                activeElement.focus()
+                // elList.scrollTop = activeElement.offsetTop - elList.offsetTop
+                elList.scrollTop = activeElement.offsetTop - Math.floor(height / 2)
+            }
+        }
     },
     computed: {
         selectedValue() {
@@ -188,6 +227,7 @@ export default {
     overflow: visible;
     width: 100%;
     margin-bottom: 20px;
+    font-family: sans-serif;
 }
 
 .select-wrapper .options-wrapper {
@@ -210,6 +250,16 @@ export default {
 .select-wrapper .options-wrapper .selected.open {
     border-radius: 4px 4px 0 0;
     border: 1px solid #005faa;
+}
+
+.select-wrapper .options-wrapper .selected:focus-visible {
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid #005faa;
+}
+
+.select-wrapper .options-wrapper .selected.open:focus-visible {
+    border-radius: 4px 4px 0 0;
 }
 
 .select-wrapper .options-wrapper .selected .flex-column {
@@ -316,6 +366,17 @@ export default {
     border-bottom: 1px dashed #002644;
     padding-bottom: 0;
     margin: 0 8px 8px;
+}
+
+.select-wrapper .options-wrapper .options .option.curr-option {
+    background-color: #f5f5f5c6;
+    /* border: 1px solid #ccc; */
+    outline: 1px solid #005faa;
+}
+
+.select-wrapper .options-wrapper .options .option:focus-visible {
+    background-color: #f5f5f5c6;
+    outline: 1px solid #ccccccd8;
 }
 
 .select-wrapper .options-wrapper .options .option.no-options {

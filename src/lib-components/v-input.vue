@@ -320,7 +320,7 @@ export default {
             if (isReadonly) return
             if (this.required && this.$parent.setInputValidations && !this.readonly) {
                 // this.$parent.setInputValidations({ isValid: this.isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
-                this.$parent.setInputValidations({ isValid: this.isValid, id: this.id })
+                this.$parent.setInputValidations({ isValid: this.isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
                 this.$parent.setOrder(this.id)
             }
             if (this.focus) setTimeout(() => this.applyFocus())
@@ -330,11 +330,11 @@ export default {
         },
         async required(required) {
             if (!required) {
-                this.$parent.setInputValidations({ isValid: true, id: this.id })
+                this.$parent.setInputValidations({ isValid: true, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
                 this.showErrorMessage = false
             } else {
                 const { isValid } = await this.checkValidation()
-                this.$parent.setInputValidations({ isValid, id: this.id })
+                this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
             }
         },
     },
