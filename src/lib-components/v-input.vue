@@ -202,15 +202,13 @@ export default {
                 const { isValid, errorMessage } = validationRule(this.inputValue)
                 return { isValid, errorMessage }
             }, { isValid: true, errorMessage: '' })
+            if (!validationResult.isValid) return validationResult
             if (this.asyncRule) validationResult = await this.asyncRule(this.inputValue).catch(err => {
                 validationResult = { isValid: false }
                 console.error(err)
                 // throw err
             })
-            // if (this.submitRule && this.$parent.isSubmitting) validationResult = await this.submitRule(this.inputValue).catch(err => {
-            //     console.error(err)
-            //     validationResult = {isValid: false}
-            // })
+            if (!validationResult.isValid) return validationResult
             if (this.submitRule) {
                 if (isFromBlur) {
                     if (this.$parent.hasSubmitted && this.inputWhenSubmited === this.inputValue) {
