@@ -13,7 +13,7 @@
       </div>
     </v-form> -->
     <v-form @submitForm="sub" @submitStart="start" @submitFailed="failed">
-      <div class="wrapper">
+      <!-- <div class="wrapper">
         <v-input v-for="(field, idx) in fields" :key="field.id" :idx="idx" :id="field.keyName" :type="field.type" :label="field.label" v-model="model[field.keyName]" :required="!isFocus"
         :rules="field.rules" :isChecklist="field.isChecklist" showPasswordIcon isChecklistGrid />
         <v-select :idx="3" id="select" v-model="count" isSearch :options="[1, 2, 3,4,5,6,7,8,9,11,222,3,4,5,645,3456,42355,4235,234,3245,2345,2345,3245,2345,345]" required />
@@ -23,7 +23,9 @@
         <v-input id="input5" v-model="model.lastName" required label="textarea"  :rules="['minLength:6', 'maxLength:10']" textareaRows="4" :readonly="readonly" />
         <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >{{isLoading? 'loading':'Submit'}}</button>
         <button type="button" @click="isFocus = !isFocus">focus</button>
-      </div>
+      </div> -->
+      <v-input id="input5" v-model="model.lastName" required label="textarea" :submitRule="sr"  />
+      <button class="submit-btn" style="font-family: sans-serif; cursor: pointer;" >{{isLoading? 'loading':'Submit'}}</button>
 
 
 
@@ -161,17 +163,18 @@ export default defineComponent({
       console.log('val: ', val);
       const res = await new Promise(resolve => {
       setTimeout(() => {
-        resolve({
-            isValid: val.includes('123'),
-            errorMessage: 'Username must include 123',
-          })
+        // resolve({
+        //     isValid: val.includes('123'),
+        //     errorMessage: 'Username must include 123',
+        //   })
+        resolve()
       }, 2000)
     })
       // await this.sr2(val)
       console.log('res: ', res);
       // return res
     return {
-                isValid: true,
+                isValid: val.includes('123'),
                 errorMessage: 'That email address is already in use',
             }
     },

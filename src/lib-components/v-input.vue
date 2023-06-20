@@ -6,13 +6,13 @@
             <textarea v-if="textareaRows && readonly" :rows="textareaRows" :value="modelValue" readonly class="readonly"
                 :placeholder="placeholder"></textarea>
             <textarea v-else-if="textareaRows" :rows="textareaRows" :ref="'ref' + id" :id="id" :name="id" :placeholder="placeholder"
-                @input="handleInput($event.target.value)" @blur="validate()" :value="modelValue"
+                @input="handleInput($event.target.value)" @blur="validate(true)" :value="modelValue"
                 :style="{ 'outline-color': showErrorMessage ? errorColor : '' }"></textarea>
 
             <input v-else-if="readonly" type="text" :value="modelValue" readonly class="readonly" :placeholder="placeholder" :class="{'no-focus': preventFocus}">
 
             <input v-else :ref="'ref' + id" :id="id" :name="id" :type="isPasswordShown || type === 'cc' ? 'text' : type"
-                :placeholder="placeholder" :maxlength="inputMaxLength" @input="handleInput($event.target.value)" @blur="validate()"
+                :placeholder="placeholder" :maxlength="inputMaxLength" @input="handleInput($event.target.value)" @blur="validate(true)"
                 :value="modelValue" autocomplete="off"
                 :style="{ 'outline-color': showErrorMessage ? errorColor : showValidIcon && isValid ? validColor : '', 'padding-inline-start': showPasswordIcon && type === 'password' ? '42px' : '' }" />
             <div class="valid-icon-wrapper">
@@ -123,6 +123,8 @@ export default {
             inputMinLength: this.minLength,
             inputMaxLength: this.maxLength,
             cardType: '',
+            inputWhenSubmited: '',
+            submitResErrMsg: '',
             validationOptsMap: {
                 required: (val) => ({
                     isValid: val && val.length ? true : false,
@@ -181,20 +183,20 @@ export default {
             // } catch (error) {
             //     isValid = false
             // }
-            // if (this.required && this.$parent.setInputValidations && !this.readonly) this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
-            if (this.required && this.$parent.setInputValidations && !this.readonly) this.$parent.setInputValidations({ isValid, id: this.id })
+            if (this.required && this.$parent.setInputValidations && !this.readonly) this.$parent.setInputValidations({ isValid, id: this.id, ref: this.$refs['ref' + this.id], validate: this.validate, hasSubmitRule: this.submitRule ? true : false })
+            // if (this.required && this.$parent.setInputValidations && !this.readonly) this.$parent.setInputValidations({ isValid, id: this.id })
         },
-        async validate() {
+        async validate(isFromBlur = false) {
             this.isBlured = true
             if (this.isChecklist) return this.validateChecklist()
             // if (this.invalidTerm) this.rulesFormat.push(this.validationOptsMap.invalidTerm)
-            const { isValid, errorMessage } = await this.checkValidation()
+            const { isValid, errorMessage } = await this.checkValidation(isFromBlur)
             this.errorMessage = errorMessage || `Please enter ${this.label.toLowerCase() || 'a valid value'}`
             this.showErrorMessage = !isValid
             this.isValid = isValid
             return { isValid }
         },
-        async checkValidation() {
+        async checkValidation(isFromBlur = false) {
             let validationResult = this.rulesFormat.reduce((acc, validationRule) => {
                 if (!acc.isValid) return acc
                 const { isValid, errorMessage } = validationRule(this.inputValue)
@@ -210,14 +212,21 @@ export default {
             //     validationResult = {isValid: false}
             // })
             if (this.submitRule) {
-                const shouldValidate = !this.validateOnSubmitOnly ? this.$parent.hasSubmitted : this.$parent.isSubmitting
-                if (shouldValidate) validationResult = await this.submitRule(this.inputValue).catch(err => {
-                    validationResult = { isValid: false }
-                    console.error(err)
-                    // throw err
-                })
+                if (isFromBlur) {
+                    if (this.$parent.hasSubmitted && this.inputWhenSubmited === this.inputValue) {
+                        validationResult = { isValid: false, errorMessage: this.submitResErrMsg || '' }
+                    }
+                } else {
+                    const shouldValidate = !this.validateOnSubmitOnly ? this.$parent.hasSubmitted : this.$parent.isSubmitting
+                    this.inputWhenSubmited = this.inputValue
+                    if (shouldValidate) validationResult = await this.submitRule(this.inputValue).catch(err => {
+                        validationResult = { isValid: false }
+                        console.error(err)
+                        // throw err
+                    })
+                    this.submitResErrMsg = validationResult.errorMessage
+                }
             }
-            // return this.isChecklist ? { ...validationResult, errorMessage: '' } : validationResult
             return validationResult
         },
         validateChecklist() {
